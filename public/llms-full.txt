@@ -1,0 +1,35 @@
+# Pravin G — WordPress Developer | PHP | React | Custom Plugins | Automation (Full Details)
+
+> Full machine-readable profile of Pravin G — WordPress Developer from Coimbatore, Tamil Nadu, India.
+
+## Identity
+
+- Name: Pravin G
+- Professional Title: WordPress Developer
+- Current Company: OneData Software Solution (Coimbatore)
+- Employment: April 2025 – Present
+- Previous Company: Anuvic Designs (Bangalore) | WordPress Developer Intern (July 2024 – March 2025)
+- Previous Experience: HCL Technologies (Chennai) | Network Analyst (2022 – 2024)
+- Education: Bachelor of Engineering (B.E.) in Electronics and Communication Engineering, SNS College of Technology (2017–2021)
+- Location: Coimbatore, Tamil Nadu, India
+- Email: pravin87ec@gmail.com
+- Phone: +91 9944709748
+
+## Professional Summary
+
+I'm Pravin G, a WordPress Developer specializing in responsive website development, custom plugin development, PHP templates, and interactive frontend experiences.
+I have experience building and maintaining business websites, integrating React components into WordPress, developing reusable templates, and implementing SEO improvements.
+My work also involves REST APIs, webhooks, Power Automate, SharePoint, Microsoft Teams, GitLab, YouTrack, and AWS integrations.
+I enjoy solving technical challenges, developing reusable solutions, improving website functionality, and connecting different systems through automation.
+My previous experience in network operations strengthened my troubleshooting and problem-solving skills, which I now apply to web development and technical integrations.
+
+## Core Technical Skills
+
+- WordPress & Backend: WordPress, PHP, Custom Plugin Development, Custom PHP Templates, Theme Customization, Elementor, Spectra, Reusable Components, WooCommerce, MySQL
+- Frontend Development: React, JavaScript, HTML5, CSS3, Tailwind CSS, Responsive Design, SVG, GSAP, ScrollTrigger
+- APIs & Integrations: REST APIs, HTTP Requests, Webhooks, JSON, React-to-WordPress Integration, Form Integrations
+- Workflow Automation: Microsoft Power Automate, SharePoint Lists, Microsoft Teams, GitLab, YouTrack, Adaptive Cards
+- Cloud & Deployment: AWS Lambda, API Gateway, Amazon S3, Vercel, Hostinger, Git
+- Technical SEO: Meta Titles & Descriptions, JSON-LD Schema Markup, FAQ Schema, Sitemap Configuration, Search Engine Indexing Troubleshooting
+- Forms & Communication: Fluent Forms, FluentSMTP, Contact Form 7
+- Network Operations: SolarWinds, ServiceNow, LAN Troubleshooting, SD-WAN, Cisco Switch Deployment Support

@@ -1,0 +1,58 @@
+# Pravin G — WordPress Developer | PHP | React | Custom Plugins | Automation
+
+> Pravin G is a WordPress Developer specializing in responsive website development, custom plugin development, PHP templates, React frontend integrations, and enterprise workflow automation.
+> Currently at OneData Software Solution in Coimbatore, Tamil Nadu, India.
+> Previously at Anuvic Designs (Bangalore) and HCL Technologies (Chennai).
+
+## Who is Pravin G?
+
+Pravin G is a WordPress Developer and engineer from Coimbatore, Tamil Nadu, India. He holds a Bachelor of Engineering (B.E.) in Electronics and Communication Engineering from SNS College of Technology (2017–2021). He specializes in custom WordPress solutions, reusable PHP templates, compiled React component integrations, and automated business workflows connecting websites with SharePoint, Microsoft Teams, GitLab, YouTrack, and AWS.
+
+## Core Capabilities & Services
+
+### 1. WordPress Development & Custom Plugins
+Pravin develops and maintains high-performance business and SaaS websites. He writes custom plugins and clean, reusable PHP templates for complex industry and product pages.
+
+### 2. React & Frontend Integration
+Pravin integrates compiled React components into WordPress platforms, developing interactive JavaScript interfaces, custom sliders, SVG animations, and exploring GSAP and ScrollTrigger.
+
+### 3. Enterprise Workflow Automation
+Pravin architects Power Automate workflows connecting SharePoint lists, GitLab project-member metadata, YouTrack resource assignments, and Microsoft Teams notifications with Adaptive Cards.
+
+### 4. Cloud & API Integrations
+Pravin builds cloud integrations utilizing AWS Lambda, API Gateway, Amazon S3, HTTP APIs, and webhooks for automated data operations.
+
+### 5. Technical SEO & Schema Markup
+Implementation of meta titles, JSON-LD structured data, FAQ schema, sitemaps, URL architecture, and diagnosing client-side React rendering indexing issues.
+
+## Technical Skills
+
+- **WordPress & Backend**: WordPress, PHP, Custom Plugins, Custom PHP Templates, Theme Customization, Elementor, Spectra, WooCommerce, MySQL
+- **Frontend**: React, JavaScript (ES6+), HTML5, CSS3, Tailwind CSS, SVG, GSAP, ScrollTrigger, Responsive Design
+- **Automation & Integrations**: Microsoft Power Automate, SharePoint Lists, Microsoft Teams, GitLab, YouTrack, Adaptive Cards, REST APIs, Webhooks, JSON
+- **Cloud & Deployment**: AWS Lambda, API Gateway, Amazon S3, Hostinger, Vercel, Git, Postman
+- **Forms & SEO**: Fluent Forms, FluentSMTP, Contact Form 7, JSON-LD, FAQ Schema, Yoast SEO
+- **Network Operations**: SolarWinds, ServiceNow, LAN troubleshooting, SD-WAN, Cisco Switch Deployment Support
+
+## Professional Experience
+
+1. **OneData Software Solution** — WordPress Developer (April 2025 – Present | Coimbatore, India)
+2. **Anuvic Designs** — WordPress Developer Intern (July 2024 – March 2025 | Bangalore, India)
+3. **HCL Technologies** — Network Analyst (2022 – 2024 | Chennai, India)
+
+## Featured Projects
+
+- **EdgeOne**: Solutions & industry platform integration, converting React to WordPress PHP templates, SEO structured data across 13+ verticals.
+- **OneCare**: Remote Patient Monitoring platform and medical device catalog landing pages (FORA, TRANSTEK, OMRON, TeleRPM).
+- **OneData Corporate Platform**: Corporate landing pages, Fluent Forms integration, Hostinger deployment.
+- **Enterprise Power Automate & SharePoint Automation**: Workflow automation connecting SharePoint, GitLab, YouTrack, and Teams with Adaptive Cards.
+- **Upskilled.ai**: Platform components and search crawler indexing analysis.
+- **Tekedge**: Custom WordPress plugins for PDF, video, and image utilities.
+- **Pulse V2**: AWS Lambda, API Gateway, and S3 workflow integrations.
+
+## Contact Information
+
+- **Name**: Pravin G
+- **Email**: pravin87ec@gmail.com
+- **Phone / WhatsApp**: +91 9944709748
+- **Location**: Coimbatore, Tamil Nadu, India
