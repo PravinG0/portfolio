@@ -4,7 +4,10 @@ import { jwtVerify } from 'jose';
 import { Resend } from 'resend';
 import { supabase } from '@/lib/supabase';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+export const dynamic = 'force-dynamic';
+
+const resendApiKey = process.env.RESEND_API_KEY;
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 async function isAdmin() {
   const store = await cookies();
@@ -44,6 +47,10 @@ export async function POST(request) {
       });
     }
 
+    if (!resend) {
+      return NextResponse.json({ error: 'Resend API key is not configured' }, { status: 500 });
+    }
+
     // Note: If you do not have a verified domain in Resend, 
     // you can only send emails to the email address registered with your Resend account.
     // To send to "any mailer", you must verify a custom domain in the Resend dashboard 
@@ -75,12 +82,14 @@ export async function POST(request) {
     }
 
     // Save the sent email to the inquiries database so the admin can see the history
-    await supabase.from('inquiries').insert([{
-      name: 'Sent by Sarang',
-      email: to,
-      message: `SUBJECT: ${subject}\n\n${message}`,
-      read: true // automatically mark sent emails as read
-    }]);
+    if (supabase) {
+      await supabase.from('inquiries').insert([{
+        name: 'Sent by Sarang',
+        email: to,
+        message: `SUBJECT: ${subject}\n\n${message}`,
+        read: true // automatically mark sent emails as read
+      }]);
+    }
 
     return NextResponse.json({ success: true, data });
   } catch (err) {

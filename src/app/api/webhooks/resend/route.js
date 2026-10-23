@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -30,6 +32,11 @@ export async function POST(request) {
     const fullMessage = `SUBJECT: ${subject || 'No Subject'}\n\n${messageBody}`;
 
     // Insert the received email into the inquiries table so it appears in the Admin Panel
+    if (!supabase) {
+      console.warn('Supabase not configured for incoming webhook email');
+      return NextResponse.json({ success: true, warning: 'Database not configured' });
+    }
+
     const { error } = await supabase.from('inquiries').insert([{ 
       name, 
       email, 

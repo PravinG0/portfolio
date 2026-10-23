@@ -37,24 +37,26 @@ export async function middleware(request) {
     const bypass = request.cookies.get('cs_bypass')?.value;
     const csPass = process.env.COMING_SOON_PASSWORD;
     if (!csPass || bypass !== csPass) {
-      // Hit Supabase REST directly (edge-compatible, no SDK needed)
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/settings?key=eq.coming_soon&select=value`,
-          {
-            headers: {
-              apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
-              Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
-            },
-            cache: 'no-store',
+      if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+        // Hit Supabase REST directly (edge-compatible, no SDK needed)
+        try {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/settings?key=eq.coming_soon&select=value`,
+            {
+              headers: {
+                apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
+                Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+              },
+              cache: 'no-store',
+            }
+          );
+          const [row] = await res.json();
+          if (row?.value === true) {
+            return NextResponse.redirect(new URL('/coming-soon', request.url));
           }
-        );
-        const [row] = await res.json();
-        if (row?.value === true) {
-          return NextResponse.redirect(new URL('/coming-soon', request.url));
+        } catch {
+          // If Supabase unreachable, don't block the site
         }
-      } catch {
-        // If Supabase unreachable, don't block the site
       }
     }
   }

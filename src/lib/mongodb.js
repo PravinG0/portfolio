@@ -2,12 +2,14 @@ import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-if (!MONGODB_URI) throw new Error('Set MONGODB_URI in .env.local');
-
 let cached = global.mongoose;
 if (!cached) cached = global.mongoose = { conn: null, promise: null };
 
 export default async function connectDB() {
+  if (!MONGODB_URI) {
+    console.warn('MONGODB_URI is not set in environment variables');
+    return null;
+  }
   if (cached.conn) return cached.conn;
 
   if (!cached.promise) {
