@@ -61,7 +61,7 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer ref={ref} className="relative border-t border-white/8 px-10 md:px-20 py-16">
+    <footer ref={ref} className="relative border-t border-slate-200 bg-white/70 backdrop-blur-md px-10 md:px-20 py-16">
 
       {/* top row */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 mb-16">
@@ -75,9 +75,9 @@ export default function Footer() {
             className="font-black tracking-tighter leading-[0.85]"
             style={{ fontSize: "clamp(3rem, 8vw, 7rem)" }}
           >
-            <span className="block text-white">Pravin G.</span>
+            <span className="block text-slate-900">Pravin G.</span>
           </h2>
-          <p className="text-white/40 text-xs mt-3 max-w-sm font-light">
+          <p className="text-slate-600 text-xs mt-3 max-w-sm font-normal">
             WordPress Developer · PHP · React · Custom Plugins · Enterprise Automation
           </p>
         </div>
@@ -89,21 +89,21 @@ export default function Footer() {
               <Link
                 key={href}
                 href={href}
-                className="text-white/40 hover:text-[#ff6b1a] transition-colors duration-300"
+                className="text-slate-600 hover:text-[#ff6b1a] transition-colors duration-300 font-medium"
               >
                 {label}
               </Link>
             ))}
           </nav>
 
-          <div className="flex flex-col md:items-end gap-1 text-[11px] text-white/50">
+          <div className="flex flex-col md:items-end gap-1 text-[11px] text-slate-700 font-medium">
             <a href="mailto:pravin87ec@gmail.com" className="hover:text-[#ff6b1a] transition-colors">
               pravin87ec@gmail.com
             </a>
             <a href="tel:+919944709748" className="hover:text-[#ff6b1a] transition-colors">
               +91 9944709748
             </a>
-            <span className="text-white/30 text-[10px] tracking-wider uppercase">
+            <span className="text-slate-500 text-[10px] tracking-wider uppercase font-normal">
               Coimbatore, Tamil Nadu, India
             </span>
           </div>
@@ -117,7 +117,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => trackClick(`social-${label.toLowerCase()}`, href)}
-                  className="text-white/25 hover:text-white/70 transition-colors duration-300"
+                  className="text-slate-500 hover:text-slate-900 transition-colors duration-300"
                 >
                   {label}
                 </a>
@@ -128,16 +128,16 @@ export default function Footer() {
       </div>
 
       {/* divider */}
-      <div className="w-full h-px bg-white/8 mb-8" />
+      <div className="w-full h-px bg-slate-200 mb-8" />
 
       {/* bottom row */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <p
-          className="text-[10px] text-white/40 tracking-widest font-mono"
+          className="text-[10px] text-slate-600 tracking-widest font-mono"
         >
           pravin87ec@gmail.com · +91 9944709748
         </p>
-        <p className="text-[10px] text-white/20 tracking-[0.3em] uppercase">
+        <p className="text-[10px] text-slate-500 tracking-[0.3em] uppercase">
           © {new Date().getFullYear()} Pravin G · Coimbatore, Tamil Nadu, India. All rights reserved.
         </p>
       </div>

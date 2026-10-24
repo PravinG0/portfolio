@@ -7,7 +7,7 @@ import { SECTION, COUNTRIES as COUNTRY_LIST } from "@/app/contact/content";
 gsap.registerPlugin(ScrollTrigger);
 
 const boxInput =
-  "contact-field w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#ff6b1a]/60 transition-colors duration-300 text-sm";
+  "contact-field w-full bg-white/80 border border-slate-300 rounded-xl px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#ff6b1a] transition-colors duration-300 text-sm shadow-sm";
 
 export default function Contact({ standalone = false }) {
   const ref = useRef(null);
@@ -109,7 +109,7 @@ export default function Contact({ standalone = false }) {
           >
             {/* Name */}
             <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] text-white/30 tracking-[0.3em] uppercase">Name</span>
+              <span className="text-[10px] text-slate-500 tracking-[0.3em] uppercase font-medium">Name</span>
               <input
                 suppressHydrationWarning
                 className={boxInput}
@@ -127,10 +127,10 @@ export default function Contact({ standalone = false }) {
                 suppressHydrationWarning
                 type="button"
                 onClick={() => setContactType('email')}
-                className={`flex-1 py-2 rounded-lg text-[10px] tracking-[0.2em] uppercase font-medium transition-all duration-200 ${
+                className={`flex-1 py-2 rounded-lg text-[10px] tracking-[0.2em] uppercase font-bold transition-all duration-200 ${
                   contactType === 'email'
-                    ? 'bg-[#ff6b1a] text-black'
-                    : 'bg-white/5 text-white/30 hover:bg-white/10'
+                    ? 'bg-[#ff6b1a] text-white shadow-sm'
+                    : 'bg-slate-200/70 text-slate-600 hover:bg-slate-200'
                 }`}
               >
                 Email
@@ -139,10 +139,10 @@ export default function Contact({ standalone = false }) {
                 suppressHydrationWarning
                 type="button"
                 onClick={() => setContactType('phone')}
-                className={`flex-1 py-2 rounded-lg text-[10px] tracking-[0.2em] uppercase font-medium transition-all duration-200 ${
+                className={`flex-1 py-2 rounded-lg text-[10px] tracking-[0.2em] uppercase font-bold transition-all duration-200 ${
                   contactType === 'phone'
-                    ? 'bg-[#25D366] text-black'
-                    : 'bg-white/5 text-white/30 hover:bg-white/10'
+                    ? 'bg-[#25D366] text-white shadow-sm'
+                    : 'bg-slate-200/70 text-slate-600 hover:bg-slate-200'
                 }`}
               >
                 WhatsApp
@@ -152,7 +152,7 @@ export default function Contact({ standalone = false }) {
             {/* Email Field */}
             {contactType === 'email' && (
               <div className="flex flex-col gap-1.5">
-                <span className="text-[10px] text-white/30 tracking-[0.3em] uppercase">Email</span>
+                <span className="text-[10px] text-slate-500 tracking-[0.3em] uppercase font-medium">Email</span>
                 <input
                   suppressHydrationWarning
                   className={boxInput}
@@ -168,33 +168,33 @@ export default function Contact({ standalone = false }) {
             {/* Phone Field with Country Code Picker */}
             {contactType === 'phone' && (
               <div className="flex flex-col gap-1.5">
-                <span className="text-[10px] text-[#25D366]/60 tracking-[0.3em] uppercase">Phone (WhatsApp)</span>
+                <span className="text-[10px] text-[#25D366] tracking-[0.3em] uppercase font-medium">Phone (WhatsApp)</span>
                 <div className="flex gap-2">
                   {/* Country code picker */}
                   <div className="relative">
                     <button
                       type="button"
                       onClick={() => setShowCCPicker(!showCCPicker)}
-                      className="flex items-center gap-1.5 h-full bg-white/5 border border-white/10 rounded-xl px-3 py-3 text-sm text-white hover:border-[#25D366]/40 transition-colors duration-200 whitespace-nowrap"
+                      className="flex items-center gap-1.5 h-full bg-white/80 border border-slate-300 rounded-xl px-3 py-3 text-sm text-slate-900 hover:border-[#25D366]/60 transition-colors duration-200 whitespace-nowrap shadow-sm"
                     >
                       <span>{selectedCC.flag}</span>
-                      <span className="text-white/60">+{selectedCC.code}</span>
-                      <span className="text-white/30 text-xs">›</span>
+                      <span className="text-slate-700">+{selectedCC.code}</span>
+                      <span className="text-slate-400 text-xs">›</span>
                     </button>
                     {showCCPicker && (
-                      <div className="absolute z-50 top-full left-0 mt-1 w-56 bg-[#111] border border-white/10 rounded-xl overflow-y-auto max-h-56 shadow-2xl custom-scroll">
+                      <div className="absolute z-50 top-full left-0 mt-1 w-56 bg-white border border-slate-200 rounded-xl overflow-y-auto max-h-56 shadow-2xl custom-scroll">
                         {COUNTRY_LIST.map((c) => (
                           <button
                             key={c.code + c.name}
                             type="button"
                             onClick={() => { setSelectedCC(c); setShowCCPicker(false); }}
-                            className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-white/5 transition-colors text-left ${
-                              selectedCC.code === c.code && selectedCC.name === c.name ? 'text-[#25D366]' : 'text-white/70'
+                            className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm hover:bg-slate-100 transition-colors text-left ${
+                              selectedCC.code === c.code && selectedCC.name === c.name ? 'text-[#25D366] font-bold' : 'text-slate-700'
                             }`}
                           >
                             <span>{c.flag}</span>
                             <span className="flex-1">{c.name}</span>
-                            <span className="text-white/30 text-xs">+{c.code}</span>
+                            <span className="text-slate-400 text-xs">+{c.code}</span>
                           </button>
                         ))}
                       </div>
@@ -216,7 +216,7 @@ export default function Contact({ standalone = false }) {
 
             {/* Reason */}
             <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] text-white/30 tracking-[0.3em] uppercase">Reason</span>
+              <span className="text-[10px] text-slate-500 tracking-[0.3em] uppercase font-medium">Reason</span>
               <textarea
                 suppressHydrationWarning
                 className={boxInput + " resize-none"}
@@ -229,7 +229,7 @@ export default function Contact({ standalone = false }) {
             </div>
 
             {status === 'error' && (
-              <p className="text-red-400 text-sm">Something went wrong. Please try again.</p>
+              <p className="text-red-500 text-sm">Something went wrong. Please try again.</p>
             )}
 
             {status === 'sent' ? (
@@ -241,10 +241,10 @@ export default function Contact({ standalone = false }) {
                 suppressHydrationWarning
                 type="submit"
                 disabled={status === 'sending'}
-                className={`contact-btn w-full font-bold py-4 rounded-full text-sm uppercase tracking-widest transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed ${
+                className={`contact-btn w-full font-bold py-4 rounded-full text-sm uppercase tracking-widest transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed shadow-md ${
                   contactType === 'phone'
-                    ? 'bg-[#25D366] text-black hover:bg-[#1ebe5d]'
-                    : 'bg-[#ff6b1a] text-black hover:bg-[#ff8c42]'
+                    ? 'bg-[#25D366] text-white hover:bg-[#1ebe5d]'
+                    : 'bg-[#ff6b1a] text-white hover:bg-slate-900'
                 }`}
               >
                 {status === 'sending' ? 'Sending…' : contactType === 'phone' ? 'Open WhatsApp →' : 'Send Message'}
@@ -254,7 +254,7 @@ export default function Contact({ standalone = false }) {
         </div>
 
         {/* DIVIDER */}
-        <div className="contact-divider hidden md:block w-px self-stretch bg-white/10 mx-8 origin-top" />
+        <div className="contact-divider hidden md:block w-px self-stretch bg-slate-200 mx-8 origin-top" />
 
         {/* RIGHT — heading pinned to BOTTOM-RIGHT */}
         <div className="w-full md:w-[58%] pl-0 md:pl-6 mt-16 md:mt-0 flex flex-col justify-end text-right">
@@ -262,22 +262,22 @@ export default function Contact({ standalone = false }) {
             className="contact-h font-black tracking-tighter leading-[0.88]"
             style={{ fontSize: "clamp(2.6rem, 5.5vw, 6.5rem)" }}
           >
-            <span className="block text-white">Let's build</span>
-            <span className="block text-white">something</span>
+            <span className="block text-slate-900">Let's build</span>
+            <span className="block text-slate-900">something</span>
             <span className="block ghost-orange">extraordinary.</span>
           </h2>
-          <p className="contact-label mt-6 text-white/40 text-sm font-light leading-relaxed text-right">
+          <p className="contact-label mt-6 text-slate-600 text-sm font-normal leading-relaxed text-right">
             Have a project or technical role in mind?<br />Reach out directly via form, email, or WhatsApp.
           </p>
 
           <div className="contact-label mt-8 flex flex-col items-end gap-2 text-xs">
-            <a href="mailto:pravin87ec@gmail.com" className="text-white/70 hover:text-[#ff6b1a] transition-colors font-medium">
+            <a href="mailto:pravin87ec@gmail.com" className="text-slate-800 hover:text-[#ff6b1a] transition-colors font-medium">
               ✉️ pravin87ec@gmail.com
             </a>
-            <a href="tel:+919944709748" className="text-white/70 hover:text-[#25D366] transition-colors font-medium">
+            <a href="tel:+919944709748" className="text-slate-800 hover:text-[#25D366] transition-colors font-medium">
               📞 +91 9944709748
             </a>
-            <span className="text-white/30 text-[10px] tracking-widest uppercase">
+            <span className="text-slate-400 text-[10px] tracking-widest uppercase">
               📍 Coimbatore, Tamil Nadu, India
             </span>
           </div>

@@ -65,27 +65,27 @@ export default function NewsletterPopup() {
   if (pathname?.startsWith("/admin") || !isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="relative w-full max-w-md bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 shadow-2xl animate-fade-in-up">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+      <div className="relative w-full max-w-md bg-white border border-slate-200 rounded-3xl p-8 shadow-2xl animate-fade-in-up">
         <button 
           onClick={closePopup}
-          className="absolute top-6 right-6 text-white/40 hover:text-white transition-colors"
+          className="absolute top-6 right-6 text-slate-400 hover:text-slate-800 transition-colors"
         >
           <FiX size={24} />
         </button>
 
         <div className="mb-6">
-          <div className="w-12 h-12 bg-[#ff6b1a]/10 text-[#ff6b1a] rounded-xl flex items-center justify-center mb-4">
+          <div className="w-12 h-12 bg-orange-100 text-[#ff6b1a] rounded-xl flex items-center justify-center mb-4">
             <FiMail size={24} />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">Join the Newsletter</h2>
-          <p className="text-white/60 text-sm leading-relaxed">
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">Join the Newsletter</h2>
+          <p className="text-slate-600 text-sm leading-relaxed">
             Get notified whenever I publish new cinematic portfolios, web development tips, or creative design resources.
           </p>
         </div>
 
         {status === "success" ? (
-          <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 flex items-center gap-3 text-green-500">
+          <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3 text-green-600">
             <FiCheckCircle size={20} />
             <span className="font-medium">{message}</span>
           </div>
@@ -98,7 +98,7 @@ export default function NewsletterPopup() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email address"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-[#ff6b1a] transition-colors"
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#ff6b1a] focus:bg-white transition-colors"
               />
             </div>
             
@@ -109,14 +109,14 @@ export default function NewsletterPopup() {
             <button
               type="submit"
               disabled={status === "loading"}
-              className="w-full py-3 bg-[#ff6b1a] text-black font-bold rounded-xl hover:bg-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-[#ff6b1a] text-white font-bold rounded-xl hover:bg-slate-900 shadow-md shadow-orange-500/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {status === "loading" ? "Subscribing..." : "Subscribe Now"}
             </button>
           </form>
         )}
         
-        <p className="text-[10px] text-white/30 mt-4 text-center">
+        <p className="text-[10px] text-slate-400 mt-4 text-center">
           No spam. Unsubscribe at any time.
         </p>
       </div>

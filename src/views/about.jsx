@@ -12,7 +12,7 @@ const renderParsedText = (text) => {
   return parts.map((part, index) => {
     if (index % 2 === 1) {
       return (
-        <span key={index} className="font-serif italic text-white/90">
+        <span key={index} className="font-serif italic text-slate-900 font-semibold">
           {part}
         </span>
       );
@@ -41,7 +41,7 @@ export default function AboutPage() {
     <section ref={ref} className="relative w-full min-h-dvh overflow-y-auto">
 
       {/* Background image */}
-      <div className="ap-img absolute inset-0 z-0 opacity-20">
+      <div className="ap-img absolute inset-0 z-0 opacity-15">
         <Image
           src="/photo/pravin.jpg"
           alt="Pravin G"
@@ -49,11 +49,11 @@ export default function AboutPage() {
           className="object-cover object-center filter blur-md"
           priority
         />
-        {/* Mobile: heavy bottom dark overlay so text is readable */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-[#080808]/80 to-[#080808]/30 md:hidden" />
+        {/* Mobile: heavy bottom light overlay so text is readable */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/80 to-[#f8fafc]/30 md:hidden" />
         {/* Desktop: side gradient */}
-        <div className="hidden md:block absolute inset-0 bg-gradient-to-l from-[#080808] via-[#080808]/90 to-transparent" />
-        <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-[#080808] via-transparent to-[#080808]/60" />
+        <div className="hidden md:block absolute inset-0 bg-gradient-to-l from-[#f8fafc] via-[#f8fafc]/90 to-transparent" />
+        <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-[#f8fafc] via-transparent to-[#f8fafc]/60" />
       </div>
 
       {/* ── MOBILE LAYOUT ── */}
@@ -62,8 +62,8 @@ export default function AboutPage() {
           {SECTION.label}
         </p>
         <h1 className="ap-h font-black text-3xl tracking-tighter leading-none mb-6">
-          <span className="block text-white">{HEADING.line1}</span>
-          <span className="block text-white">{HEADING.line2}</span>
+          <span className="block text-slate-900">{HEADING.line1}</span>
+          <span className="block text-slate-900">{HEADING.line2}</span>
           <span className="block ghost">{HEADING.line3}</span>
         </h1>
 
@@ -83,7 +83,7 @@ export default function AboutPage() {
         </div>
 
         {BIO.map((text, i) => (
-          <p key={i} className="ap-bio text-[13px] text-white/50 mb-3 font-light leading-relaxed">
+          <p key={i} className="ap-bio text-[13px] text-slate-600 mb-3 font-normal leading-relaxed">
             {renderParsedText(text)}
           </p>
         ))}
@@ -92,7 +92,7 @@ export default function AboutPage() {
           href={RESUME_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="ap-bio self-start inline-flex items-center gap-2 px-5 py-2.5 border border-[#ff6b1a]/30 text-[#ff6b1a] text-[10px] font-bold uppercase tracking-widest rounded-full hover:bg-[#ff6b1a] hover:text-black transition-colors duration-300 mb-7"
+          className="ap-bio self-start inline-flex items-center gap-2 px-5 py-2.5 border border-[#ff6b1a]/40 text-[#ff6b1a] text-[10px] font-bold uppercase tracking-widest rounded-full hover:bg-[#ff6b1a] hover:text-white transition-colors duration-300 mb-7 bg-white/70 shadow-sm"
         >
           View Resume
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
@@ -101,33 +101,33 @@ export default function AboutPage() {
         {/* Skills horizontal scroll */}
         <div className="space-y-4">
           <div>
-            <p className="ap-bio text-[9px] tracking-[0.4em] uppercase mb-3 text-white/45">Tech I Work With</p>
+            <p className="ap-bio text-[9px] tracking-[0.4em] uppercase mb-3 text-slate-500 font-medium">Tech I Work With</p>
             <div className="flex gap-1.5 overflow-x-auto pb-2 -mx-5 px-5 scrollbar-none">
               {TECH.map((s) => (
-                <span key={s.name} className="ap-skill flex-shrink-0 px-3 py-1 flex items-center gap-1 bg-white/95 rounded-full text-[8px] text-black tracking-wider uppercase font-medium">
+                <span key={s.name} className="ap-skill flex-shrink-0 px-3 py-1 flex items-center gap-1 bg-white border border-slate-200 rounded-full text-[8px] text-slate-800 tracking-wider uppercase font-medium shadow-sm">
                   <s.icon className="w-2.5 h-2.5" />{s.name}
                 </span>
               ))}
             </div>
           </div>
           <div>
-            <p className="ap-bio text-[9px] tracking-[0.4em] uppercase mb-3 text-white/45">Automation & Tools</p>
+            <p className="ap-bio text-[9px] tracking-[0.4em] uppercase mb-3 text-slate-500 font-medium">Automation & Tools</p>
             <div className="flex gap-1.5 overflow-x-auto pb-2 -mx-5 px-5 scrollbar-none">
               {CREATIVE.map((s) => (
-                <span key={s.name} className="ap-skill flex-shrink-0 px-3 py-1 flex items-center gap-1 bg-white/10 rounded-full text-[8px] text-white tracking-wider uppercase">
+                <span key={s.name} className="ap-skill flex-shrink-0 px-3 py-1 flex items-center gap-1 bg-white border border-slate-200 rounded-full text-[8px] text-slate-800 tracking-wider uppercase font-medium shadow-sm">
                   <s.icon className="w-2.5 h-2.5 text-[#ff6b1a]" />{s.name}
                 </span>
               ))}
             </div>
           </div>
           <div className="pt-2">
-            <p className="ap-bio text-[9px] tracking-[0.4em] uppercase mb-3 text-white/45">Experience & Background</p>
+            <p className="ap-bio text-[9px] tracking-[0.4em] uppercase mb-3 text-slate-500 font-medium">Experience & Background</p>
             <div className="space-y-3">
               {EXPERIENCE.map((s, idx) => (
                 <div key={idx} className="ap-skill border-l border-[#ff6b1a]/40 pl-3 py-0.5">
-                  <h4 className="text-[11px] text-white font-semibold tracking-wide">{s.role}</h4>
+                  <h4 className="text-[11px] text-slate-900 font-semibold tracking-wide">{s.role}</h4>
                   <p className="text-[10px] text-[#ff6b1a] font-medium">{s.company}</p>
-                  <p className="text-[8px] text-white/40 uppercase tracking-widest mt-0.5">{s.period}</p>
+                  <p className="text-[8px] text-slate-500 uppercase tracking-widest mt-0.5">{s.period}</p>
                 </div>
               ))}
             </div>
@@ -162,11 +162,11 @@ export default function AboutPage() {
               {SECTION.label}
             </p>
             <h1 className="ap-h font-black tracking-tighter leading-[0.88] mb-8" style={{ fontSize: "clamp(2.2rem, 4.5vw, 4.5rem)" }}>
-              <span className="block text-white">{HEADING.line1}</span>
-              <span className="block text-white">{HEADING.line2}</span>
+              <span className="block text-slate-900">{HEADING.line1}</span>
+              <span className="block text-slate-900">{HEADING.line2}</span>
               <span className="block ghost">{HEADING.line3}</span>
             </h1>
-            <div className="space-y-5 text-sm text-white/50 font-light leading-relaxed mb-8 pr-4">
+            <div className="space-y-5 text-sm text-slate-600 font-normal leading-relaxed mb-8 pr-4">
               {BIO.map((text, i) => (
                 <p key={i}>
                   {renderParsedText(text)}
@@ -174,7 +174,7 @@ export default function AboutPage() {
               ))}
             </div>
             <a href={RESUME_URL} target="_blank" rel="noopener noreferrer"
-              className="ap-bio inline-flex items-center gap-2 px-6 py-3 border border-[#ff6b1a]/30 text-[#ff6b1a] text-[10px] font-bold uppercase tracking-widest rounded-full hover:bg-[#ff6b1a] hover:text-black transition-colors duration-300"
+              className="ap-bio inline-flex items-center gap-2 px-6 py-3 border border-[#ff6b1a]/40 text-[#ff6b1a] text-[10px] font-bold uppercase tracking-widest rounded-full hover:bg-[#ff6b1a] hover:text-white transition-colors duration-300 bg-white/70 shadow-sm"
             >
               View Resume
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
@@ -183,35 +183,35 @@ export default function AboutPage() {
         </div>
 
         {/* Bottom: Skills & Experience Grid */}
-        <div className="grid grid-cols-3 gap-12 pt-12 border-t border-white/10">
+        <div className="grid grid-cols-3 gap-12 pt-12 border-t border-slate-200">
           <div>
-            <p className="text-[10px] tracking-[0.4em] uppercase mb-4 text-[#ff6b1a]/80 font-medium">Tech I Work With</p>
+            <p className="text-[10px] tracking-[0.4em] uppercase mb-4 text-[#ff6b1a] font-bold">Tech I Work With</p>
             <div className="flex gap-2 flex-wrap">
               {TECH.map((s) => (
-                <span key={s.name} className="ap-skill px-3 py-1 flex items-center gap-1.5 bg-white/90 rounded-full text-[9px] text-black tracking-wider uppercase font-medium">
+                <span key={s.name} className="ap-skill px-3 py-1 flex items-center gap-1.5 bg-white border border-slate-200 rounded-full text-[9px] text-slate-800 tracking-wider uppercase font-medium shadow-sm">
                   <s.icon className="w-2.5 h-2.5" />{s.name}
                 </span>
               ))}
             </div>
           </div>
           <div>
-            <p className="text-[10px] tracking-[0.4em] uppercase mb-4 text-[#ff6b1a]/80 font-medium">Automation & Tools</p>
+            <p className="text-[10px] tracking-[0.4em] uppercase mb-4 text-[#ff6b1a] font-bold">Automation & Tools</p>
             <div className="flex gap-2 flex-wrap">
               {CREATIVE.map((s) => (
-                <span key={s.name} className="ap-skill px-3 py-1 flex items-center gap-1.5 bg-white/10 rounded-full text-[9px] text-white tracking-wider uppercase font-medium border border-white/10">
+                <span key={s.name} className="ap-skill px-3 py-1 flex items-center gap-1.5 bg-white border border-slate-200 rounded-full text-[9px] text-slate-800 tracking-wider uppercase font-medium shadow-sm">
                   <s.icon className="w-2.5 h-2.5 text-[#ff6b1a]" />{s.name}
                 </span>
               ))}
             </div>
           </div>
           <div>
-            <p className="text-[10px] tracking-[0.4em] uppercase mb-4 text-[#ff6b1a]/80 font-medium">Career Timeline</p>
+            <p className="text-[10px] tracking-[0.4em] uppercase mb-4 text-[#ff6b1a] font-bold">Career Timeline</p>
             <div className="flex flex-col gap-4">
               {EXPERIENCE.map((exp, i) => (
                 <div key={i} className="ap-skill border-l-2 border-[#ff6b1a]/40 pl-4 py-1">
-                  <p className="text-white/90 text-[12px] font-semibold tracking-wide">{exp.role}</p>
+                  <p className="text-slate-900 text-[12px] font-semibold tracking-wide">{exp.role}</p>
                   <p className="text-[#ff6b1a] text-[11px] font-medium">{exp.company}</p>
-                  <p className="text-white/40 text-[9px] tracking-widest uppercase mt-0.5">{exp.period}</p>
+                  <p className="text-slate-500 text-[9px] tracking-widest uppercase mt-0.5">{exp.period}</p>
                 </div>
               ))}
             </div>

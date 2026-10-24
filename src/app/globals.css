@@ -22,8 +22,8 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: #080808;
-  color: #fff;
+  background: #f8fafc;
+  color: #09090b;
   font-family: var(--font-inter), "Inter", sans-serif;
   overflow-x: hidden;
 }
@@ -35,12 +35,12 @@ html::-webkit-scrollbar { display: none; }
 
 ::selection {
   background: var(--orange);
-  color: #000;
+  color: #fff;
 }
 
 ::-moz-selection {
   background: var(--orange);
-  color: #000;
+  color: #fff;
 }
 
 /* ── Ghost serif — Playfair italic outline, zero fill ──────────── */
@@ -49,7 +49,7 @@ html::-webkit-scrollbar { display: none; }
   font-style: italic;
   font-weight: 400;
   color: transparent;
-  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.45);
+  -webkit-text-stroke: 1.5px rgba(15, 23, 42, 0.35);
   letter-spacing: -0.01em;
 }
 
@@ -73,7 +73,7 @@ html::-webkit-scrollbar { display: none; }
   inset: 0;
   pointer-events: none;
   z-index: 999;
-  opacity: 0.04;
+  opacity: 0.02;
   will-change: transform;
   contain: strict;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
@@ -112,8 +112,8 @@ html::-webkit-scrollbar { display: none; }
   background: linear-gradient(
     to bottom,
     transparent 0%,
-    rgba(8, 8, 8, 0.6) 50%,
-    rgba(8, 8, 8, 0.95) 100%
+    rgba(248, 250, 252, 0.6) 50%,
+    rgba(248, 250, 252, 0.95) 100%
   );
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);

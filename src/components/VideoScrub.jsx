@@ -309,7 +309,7 @@ export default function VideoScrub() {
   if (!mounted) {
     // Return a static placeholder that matches the hero image for immediate LCP
     return (
-      <div className="fixed inset-0 z-0 bg-[#0a0a0a]">
+      <div className="fixed inset-0 z-0 bg-[#f8fafc]">
         <div 
           className="absolute inset-0 w-full h-full opacity-60"
           style={{
@@ -318,9 +318,9 @@ export default function VideoScrub() {
             backgroundPosition: "center top",
           }}
         />
-        <div className="absolute inset-0 bg-black/35" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/15 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/25" />
+        <div className="absolute inset-0 bg-white/45 backdrop-blur-[1px]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/50 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-white/30" />
       </div>
     );
   }
@@ -331,7 +331,7 @@ export default function VideoScrub() {
   // Phone: scroll-driven parallax swipe — image moves WITH finger in real time
   if (isMobile) {
     return (
-      <div className="fixed inset-0 z-0 overflow-hidden bg-[#0a0a0a]">
+      <div className="fixed inset-0 z-0 overflow-hidden bg-[#f8fafc]">
         {SECTION_IMAGES.map((sec, i) => (
           <div
             key={sec.src}
@@ -351,16 +351,16 @@ export default function VideoScrub() {
             }}
           />
         ))}
-        <div className="absolute inset-0 bg-black/45 z-10" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/10 to-transparent z-10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/25 z-10" />
+        <div className="absolute inset-0 bg-white/50 backdrop-blur-[1px] z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/40 to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-white/35 z-10" />
       </div>
     );
   }
 
   // Desktop: Full scroll-scrubbing video experience
   return (
-    <div className="fixed inset-0 z-0 bg-[#0a0a0a]">
+    <div className="fixed inset-0 z-0 bg-[#f8fafc]">
       <video ref={fwdRef} src="/videos/optimized.mp4" poster="/photo/hero.webp"
         className={cls} style={{ ...sty, opacity: 1 }}
         muted playsInline preload="metadata"
@@ -369,9 +369,9 @@ export default function VideoScrub() {
         className={cls} style={{ ...sty, opacity: 0 }}
         muted playsInline preload="none"
         aria-hidden="true" suppressHydrationWarning />
-      <div className="absolute inset-0 bg-black/35" />
-      <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/15 to-transparent" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/25" />
+      <div className="absolute inset-0 bg-white/45 backdrop-blur-[1px]" />
+      <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/50 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-white/30" />
     </div>
   );
 }

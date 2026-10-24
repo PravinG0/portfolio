@@ -41,9 +41,9 @@ function createTextTexture(gl, text, font = 'bold 30px monospace', color = 'blac
   
   if (color === 'gradient') {
     const gradient = context.createLinearGradient(0, 0, canvas.width, 0);
-    gradient.addColorStop(0, '#ffffff');
-    gradient.addColorStop(0.5, '#d4d4d4');
-    gradient.addColorStop(1, '#a3a3a3');
+    gradient.addColorStop(0, '#0f172a');
+    gradient.addColorStop(0.5, '#334155');
+    gradient.addColorStop(1, '#64748b');
     context.fillStyle = gradient;
   } else {
     context.fillStyle = color;

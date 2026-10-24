@@ -54,16 +54,16 @@ export default function ContactPopup({ isOpen, onClose }) {
     onClose();
   };
 
-  const inputCls = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#ff6b1a]/50 transition-colors duration-200 text-sm";
+  const inputCls = "w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#ff6b1a] focus:bg-white transition-colors duration-200 text-sm";
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
+      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onClick={onClose} />
 
-      <div className="relative bg-[#0a0a0a] border border-white/10 rounded-3xl p-7 md:p-10 max-w-md w-full shadow-2xl">
+      <div className="relative bg-white border border-slate-200 rounded-3xl p-7 md:p-10 max-w-md w-full shadow-2xl">
 
         {/* Close */}
-        <button onClick={onClose} className="absolute top-5 right-5 text-white/30 hover:text-white transition-colors">
+        <button onClick={onClose} className="absolute top-5 right-5 text-slate-400 hover:text-slate-800 transition-colors">
           <FiX size={20} />
         </button>
 
@@ -71,7 +71,7 @@ export default function ContactPopup({ isOpen, onClose }) {
         {step !== "choose" && (
           <button
             onClick={() => { setStep("choose"); setStatus("idle"); }}
-            className="absolute top-5 left-5 text-white/30 hover:text-white transition-colors flex items-center gap-1.5 text-[11px] uppercase tracking-widest"
+            className="absolute top-5 left-5 text-slate-400 hover:text-slate-800 transition-colors flex items-center gap-1.5 text-[11px] uppercase tracking-widest"
           >
             <FiArrowLeft size={13} /> Back
           </button>
@@ -80,34 +80,34 @@ export default function ContactPopup({ isOpen, onClose }) {
         {/* ── STEP 1: Choose ── */}
         {step === "choose" && (
           <>
-            <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter mb-2 mt-1">Let's Talk.</h3>
-            <p className="text-white/35 text-sm mb-7 leading-relaxed">
+            <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tighter mb-2 mt-1">Let's Talk.</h3>
+            <p className="text-slate-500 text-sm mb-7 leading-relaxed">
               How would you like to reach out?
             </p>
             <div className="flex flex-col gap-3">
               <button
                 onClick={() => setStep("email")}
-                className="flex items-center gap-4 bg-[#ff6b1a]/8 hover:bg-[#ff6b1a]/15 border border-[#ff6b1a]/20 p-4 rounded-2xl transition-all group text-left"
+                className="flex items-center gap-4 bg-orange-50/70 hover:bg-orange-100/80 border border-orange-200/80 p-4 rounded-2xl transition-all group text-left"
               >
-                <div className="w-11 h-11 rounded-full bg-[#ff6b1a]/15 text-[#ff6b1a] flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
+                <div className="w-11 h-11 rounded-full bg-orange-100 text-[#ff6b1a] flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
                   <FiMail size={18} />
                 </div>
                 <div>
-                  <p className="text-white font-bold text-sm">Email</p>
-                  <p className="text-white/35 text-xs mt-0.5">Send a message to my inbox</p>
+                  <p className="text-slate-900 font-bold text-sm">Email</p>
+                  <p className="text-slate-500 text-xs mt-0.5">Send a message to my inbox</p>
                 </div>
               </button>
 
               <button
                 onClick={() => setStep("whatsapp")}
-                className="flex items-center gap-4 bg-[#25D366]/8 hover:bg-[#25D366]/15 border border-[#25D366]/20 p-4 rounded-2xl transition-all group text-left"
+                className="flex items-center gap-4 bg-emerald-50/70 hover:bg-emerald-100/80 border border-emerald-200/80 p-4 rounded-2xl transition-all group text-left"
               >
-                <div className="w-11 h-11 rounded-full bg-[#25D366]/15 text-[#25D366] flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
+                <div className="w-11 h-11 rounded-full bg-emerald-100 text-[#16a34a] flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
                   <IoLogoWhatsapp size={20} />
                 </div>
                 <div>
-                  <p className="text-white font-bold text-sm">WhatsApp</p>
-                  <p className="text-white/35 text-xs mt-0.5">Chat directly on WhatsApp</p>
+                  <p className="text-slate-900 font-bold text-sm">WhatsApp</p>
+                  <p className="text-slate-500 text-xs mt-0.5">Chat directly on WhatsApp</p>
                 </div>
               </button>
             </div>
@@ -118,33 +118,33 @@ export default function ContactPopup({ isOpen, onClose }) {
         {step === "email" && (
           <>
             <div className="flex items-center gap-3 mb-6 mt-6">
-              <div className="w-9 h-9 rounded-full bg-[#ff6b1a]/15 text-[#ff6b1a] flex items-center justify-center shrink-0">
+              <div className="w-9 h-9 rounded-full bg-orange-100 text-[#ff6b1a] flex items-center justify-center shrink-0">
                 <FiMail size={15} />
               </div>
               <div>
-                <h3 className="text-white font-black tracking-tight text-lg">Email Me</h3>
-                <p className="text-white/30 text-xs">I'll reply within 24 hours</p>
+                <h3 className="text-slate-900 font-black tracking-tight text-lg">Email Me</h3>
+                <p className="text-slate-500 text-xs">I'll reply within 24 hours</p>
               </div>
             </div>
 
             {status === "sent" ? (
               <div className="flex flex-col items-center gap-3 py-8 text-center">
-                <div className="w-14 h-14 rounded-full bg-[#ff6b1a]/15 flex items-center justify-center">
+                <div className="w-14 h-14 rounded-full bg-orange-100 flex items-center justify-center">
                   <FiCheck size={24} className="text-[#ff6b1a]" />
                 </div>
-                <p className="text-white font-bold">Message sent!</p>
-                <p className="text-white/35 text-sm">I'll get back to you soon.</p>
+                <p className="text-slate-900 font-bold">Message sent!</p>
+                <p className="text-slate-500 text-sm">I'll get back to you soon.</p>
               </div>
             ) : (
               <form onSubmit={handleEmail} className="flex flex-col gap-3">
                 <input suppressHydrationWarning className={inputCls} placeholder="Your name" required value={name} onChange={e => setName(e.target.value)} />
                 <textarea suppressHydrationWarning className={inputCls + " resize-none"} rows={4} placeholder="What's the project about?" required value={reason} onChange={e => setReason(e.target.value)} />
-                {status === "error" && <p className="text-red-400 text-xs">Something went wrong. Try again.</p>}
+                {status === "error" && <p className="text-red-500 text-xs">Something went wrong. Try again.</p>}
                 <button
                   suppressHydrationWarning
                   type="submit"
                   disabled={status === "sending"}
-                  className="w-full py-3.5 bg-[#ff6b1a] text-black font-bold rounded-xl text-sm uppercase tracking-widest hover:bg-white transition-colors duration-300 disabled:opacity-50 flex items-center justify-center gap-2 mt-1"
+                  className="w-full py-3.5 bg-[#ff6b1a] text-white font-bold rounded-xl text-sm uppercase tracking-widest hover:bg-slate-900 transition-colors duration-300 disabled:opacity-50 flex items-center justify-center gap-2 mt-1 shadow-md shadow-orange-500/20"
                 >
                   <FiSend size={14} />
                   {status === "sending" ? "Sending…" : "Send Message"}
@@ -158,12 +158,12 @@ export default function ContactPopup({ isOpen, onClose }) {
         {step === "whatsapp" && (
           <>
             <div className="flex items-center gap-3 mb-6 mt-6">
-              <div className="w-9 h-9 rounded-full bg-[#25D366]/15 text-[#25D366] flex items-center justify-center shrink-0">
+              <div className="w-9 h-9 rounded-full bg-emerald-100 text-[#16a34a] flex items-center justify-center shrink-0">
                 <IoLogoWhatsapp size={18} />
               </div>
               <div>
-                <h3 className="text-white font-black tracking-tight text-lg">WhatsApp</h3>
-                <p className="text-white/30 text-xs">Opens WhatsApp with your message</p>
+                <h3 className="text-slate-900 font-black tracking-tight text-lg">WhatsApp</h3>
+                <p className="text-slate-500 text-xs">Opens WhatsApp with your message</p>
               </div>
             </div>
 
@@ -176,11 +176,11 @@ export default function ContactPopup({ isOpen, onClose }) {
                     const next = COUNTRIES[(COUNTRIES.indexOf(selectedCC) + 1) % COUNTRIES.length];
                     setSelectedCC(next);
                   }}
-                  className="shrink-0 flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-xl px-3 py-3 text-sm text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+                  className="shrink-0 flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-3 py-3 text-sm text-slate-700 hover:text-slate-900 hover:bg-slate-100 transition-colors"
                   title="Change country code"
                 >
                   <span>{selectedCC.flag}</span>
-                  <span className="text-white/40 text-xs">+{selectedCC.code}</span>
+                  <span className="text-slate-500 text-xs">+{selectedCC.code}</span>
                 </button>
                 <input
                   suppressHydrationWarning
@@ -195,7 +195,7 @@ export default function ContactPopup({ isOpen, onClose }) {
               <button
                 suppressHydrationWarning
                 type="submit"
-                className="w-full py-3.5 bg-[#25D366] text-black font-bold rounded-xl text-sm uppercase tracking-widest hover:bg-white transition-colors duration-300 flex items-center justify-center gap-2 mt-1"
+                className="w-full py-3.5 bg-[#25D366] text-white font-bold rounded-xl text-sm uppercase tracking-widest hover:bg-slate-900 transition-colors duration-300 flex items-center justify-center gap-2 mt-1 shadow-md shadow-emerald-500/20"
               >
                 <IoLogoWhatsapp size={16} />
                 Open WhatsApp

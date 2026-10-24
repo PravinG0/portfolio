@@ -103,27 +103,26 @@ export default function ProjectPage() {
                 )
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] to-[#080808]" />
-              )}
-              {/* Dark overlay */}
-              <div className="absolute inset-0 bg-black/55" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#080808] via-transparent to-transparent" />
+                        {/* Light overlay */}
+              <div className="absolute inset-0 bg-white/40 backdrop-blur-[1px]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/50 to-transparent" />
 
               {/* Hero text */}
               <div className="absolute bottom-0 left-0 right-0 px-6 md:px-16 pb-10 md:pb-14">
                 <div className="proj-hero-text">
                   {project.category && (
-                    <span className="inline-block text-[10px] text-[#ff6b1a] tracking-[0.5em] uppercase font-medium mb-3 border border-[#ff6b1a]/30 px-3 py-1 rounded-full">
+                    <span className="inline-block text-[10px] text-[#ff6b1a] tracking-[0.5em] uppercase font-bold mb-3 border border-[#ff6b1a]/40 bg-white/70 px-3 py-1 rounded-full shadow-sm">
                       {project.category}
                     </span>
                   )}
                   <h1
-                    className="font-black tracking-tighter leading-[0.88] text-white"
+                    className="font-black tracking-tighter leading-[0.88] text-slate-900"
                     style={{ fontSize: "clamp(2.2rem, 6vw, 5rem)" }}
                   >
                     {project.title}
                   </h1>
                   {(project.client || project.year) && (
-                    <div className="flex items-center gap-6 mt-4 text-white/50 text-sm">
+                    <div className="flex items-center gap-6 mt-4 text-slate-600 text-sm font-medium">
                       {project.client && (
                         <span className="flex items-center gap-2">
                           <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.2"/><path d="M2.5 12c0-2.485 2.015-4.5 4.5-4.5s4.5 2.015 4.5 4.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>
@@ -150,8 +149,8 @@ export default function ProjectPage() {
                 <div>
                   {project.description && (
                     <>
-                      <h2 className="font-black text-xl text-white mb-5 tracking-tight">The Challenge</h2>
-                      <p className="text-white/55 text-base md:text-lg font-light leading-relaxed mb-12">
+                      <h2 className="font-black text-xl text-slate-900 mb-5 tracking-tight">The Challenge</h2>
+                      <p className="text-slate-600 text-base md:text-lg font-normal leading-relaxed mb-12">
                         {project.description}
                       </p>
                     </>
@@ -159,21 +158,21 @@ export default function ProjectPage() {
 
                   {project.review && (
                     <blockquote className="border-l-2 border-[#ff6b1a]/40 pl-6 mb-12">
-                      <p className="text-white/50 italic text-base leading-relaxed font-serif">"{project.review}"</p>
+                      <p className="text-slate-700 italic text-base leading-relaxed font-serif">"{project.review}"</p>
                     </blockquote>
                   )}
                   {/* Responsive Previews */}
                   {(project.desktop_view_url || project.phone_view_url) && (
                     <div className="mb-12">
-                      <h2 className="font-black text-xl text-white mb-6 tracking-tight">Previews</h2>
+                      <h2 className="font-black text-xl text-slate-900 mb-6 tracking-tight">Previews</h2>
                       <div className="flex flex-col gap-6">
                         {project.desktop_view_url && (
-                          <div className="w-full rounded-2xl overflow-hidden bg-white/5 border border-white/10">
+                          <div className="w-full rounded-2xl overflow-hidden bg-white border border-slate-200 shadow-md">
                             <img src={project.desktop_view_url} alt="Desktop Preview" className="w-full object-cover" />
                           </div>
                         )}
                         {project.phone_view_url && (
-                          <div className="w-full max-w-sm mx-auto rounded-2xl overflow-hidden bg-white/5 border border-white/10">
+                          <div className="w-full max-w-sm mx-auto rounded-2xl overflow-hidden bg-white border border-slate-200 shadow-md">
                             <img src={project.phone_view_url} alt="Phone Preview" className="w-full object-cover" />
                           </div>
                         )}
@@ -184,10 +183,10 @@ export default function ProjectPage() {
                   {/* Gallery */}
                   {gallery && gallery.length > 0 && (
                     <div>
-                      <h2 className="font-black text-xl text-white mb-6 tracking-tight">Gallery</h2>
+                      <h2 className="font-black text-xl text-slate-900 mb-6 tracking-tight">Gallery</h2>
                       <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                         {gallery.map((url, i) => (
-                          <div key={i} className="aspect-video rounded-xl overflow-hidden bg-white/5">
+                          <div key={i} className="aspect-video rounded-xl overflow-hidden bg-white border border-slate-200 shadow-sm">
                             {url.includes('.mp4') || url.includes('.webm') || url.includes('.mov') ? (
                               <video
                                 src={url}
@@ -210,37 +209,37 @@ export default function ProjectPage() {
 
                 {/* RIGHT — project details sidebar */}
                 <div className="md:pt-1">
-                  <div className="bg-[#111] border border-white/5 rounded-2xl p-6 md:sticky md:top-28 flex flex-col gap-6">
-                    <h3 className="font-bold text-white text-base tracking-tight">Project Details</h3>
+                  <div className="bg-white border border-slate-200 rounded-2xl p-6 md:sticky md:top-28 flex flex-col gap-6 shadow-lg">
+                    <h3 className="font-bold text-slate-900 text-base tracking-tight">Project Details</h3>
 
                     {project.client && (
                       <div>
-                        <p className="text-[9px] text-white/30 tracking-[0.4em] uppercase mb-1.5">Client</p>
-                        <p className="text-white text-sm font-medium">{project.client}</p>
+                        <p className="text-[9px] text-slate-500 tracking-[0.4em] uppercase mb-1.5 font-medium">Client</p>
+                        <p className="text-slate-900 text-sm font-semibold">{project.client}</p>
                       </div>
                     )}
 
                     {project.year && (
                       <div>
-                        <p className="text-[9px] text-white/30 tracking-[0.4em] uppercase mb-1.5">Year</p>
-                        <p className="text-white text-sm font-medium">{project.year}</p>
+                        <p className="text-[9px] text-slate-500 tracking-[0.4em] uppercase mb-1.5 font-medium">Year</p>
+                        <p className="text-slate-900 text-sm font-semibold">{project.year}</p>
                       </div>
                     )}
 
                     {project.category && (
                       <div>
-                        <p className="text-[9px] text-white/30 tracking-[0.4em] uppercase mb-1.5">Category</p>
-                        <p className="text-white/70 text-sm">{project.category}</p>
+                        <p className="text-[9px] text-slate-500 tracking-[0.4em] uppercase mb-1.5 font-medium">Category</p>
+                        <p className="text-slate-700 text-sm">{project.category}</p>
                       </div>
                     )}
 
                     {services.length > 0 && (
                       <div>
-                        <p className="text-[9px] text-white/30 tracking-[0.4em] uppercase mb-2">Services</p>
+                        <p className="text-[9px] text-slate-500 tracking-[0.4em] uppercase mb-2 font-medium">Services</p>
                         <ul className="flex flex-col gap-1.5">
                           {services.map((s) => (
-                            <li key={s} className="flex items-center gap-2 text-white/60 text-sm">
-                              <span className="w-1 h-1 rounded-full bg-[#ff6b1a] shrink-0" />
+                            <li key={s} className="flex items-center gap-2 text-slate-700 text-sm">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#ff6b1a] shrink-0" />
                               {s}
                             </li>
                           ))}
@@ -253,7 +252,7 @@ export default function ProjectPage() {
                         href={safeUrl(project.link)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-2 w-full flex items-center justify-center gap-2 bg-[#ff6b1a] text-black font-bold py-3 rounded-xl text-[11px] uppercase tracking-widest hover:bg-[#ff8c42] transition-colors duration-300"
+                        className="mt-2 w-full flex items-center justify-center gap-2 bg-[#ff6b1a] text-white font-bold py-3 rounded-xl text-[11px] uppercase tracking-widest hover:bg-slate-900 transition-colors duration-300 shadow-md"
                       >
                         View Live
                         <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -268,18 +267,18 @@ export default function ProjectPage() {
             </div>
 
             {/* ── CTA ── */}
-            <div className="border-t border-white/5 py-24 px-6 md:px-16 text-center">
-              <p className="text-[10px] text-[#ff6b1a] tracking-[0.5em] uppercase mb-5 font-medium">Start Your Journey</p>
-              <h2 className="font-black tracking-tighter leading-[0.9] mb-8 text-white" style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>
+            <div className="border-t border-slate-200 py-24 px-6 md:px-16 text-center bg-white/40">
+              <p className="text-[10px] text-[#ff6b1a] tracking-[0.5em] uppercase mb-5 font-bold">Start Your Journey</p>
+              <h2 className="font-black tracking-tighter leading-[0.9] mb-8 text-slate-900" style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>
                 Ready to Elevate<br />
                 <span className="ghost-orange italic font-serif">Your Brand Presence?</span>
               </h2>
-              <p className="text-white/30 text-sm font-light mb-10 max-w-md mx-auto leading-relaxed">
+              <p className="text-slate-600 text-sm font-normal mb-10 max-w-md mx-auto leading-relaxed">
                 From concept to completion, let's build something visually stunning and smooth to use.
               </p>
               <Link
                 href="/#contact-section"
-                className="inline-flex items-center gap-3 bg-[#ff6b1a] text-black font-black px-8 py-4 rounded-full text-[11px] uppercase tracking-[0.25em] hover:bg-[#ff8c42] transition-colors duration-300"
+                className="inline-flex items-center gap-3 bg-[#ff6b1a] text-white font-black px-8 py-4 rounded-full text-[11px] uppercase tracking-[0.25em] hover:bg-slate-900 transition-colors duration-300 shadow-lg"
               >
                 Get In Touch
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">

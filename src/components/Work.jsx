@@ -103,7 +103,7 @@ export default function Work() {
           </p>
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
             <h2
-              className="font-sans font-black tracking-tighter text-white leading-none"
+              className="font-sans font-black tracking-tighter text-slate-900 leading-none"
               style={{ fontSize: "clamp(3rem, 8vw, 6rem)" }}
             >
               {SECTION.heading}
@@ -119,7 +119,7 @@ export default function Work() {
                 <Link
                   key={cat}
                   href={`/projects?cat=${cat}`}
-                  className="px-4 py-2 rounded-full text-[10px] md:text-xs font-medium tracking-widest uppercase transition-all duration-300 bg-transparent text-white/40 border border-white/10 hover:text-white hover:border-white/30"
+                  className="px-4 py-2 rounded-full text-[10px] md:text-xs font-medium tracking-widest uppercase transition-all duration-300 bg-white/70 text-slate-600 border border-slate-300 hover:text-slate-900 hover:border-slate-500 shadow-sm"
                 >
                   {label}
                 </Link>
@@ -134,31 +134,31 @@ export default function Work() {
             <Link
               key={cat.num}
               href={cat.href}
-              className="work-item group relative flex items-start gap-8 py-10 md:py-14 border-b border-white/8 hover:border-white/20 transition-all duration-500"
+              className="work-item group relative flex items-start gap-8 py-10 md:py-14 border-b border-slate-200 hover:border-slate-400 hover:bg-white/40 transition-all duration-500"
             >
               {/* Left orange accent bar */}
               <div className="absolute left-0 top-0 bottom-0 w-px bg-[#ff6b1a] origin-top scale-y-0 group-hover:scale-y-100 transition-transform duration-500 ease-out" />
 
               {/* Number */}
               <div className="pl-3 shrink-0 w-8 pt-1">
-                <span className="font-mono text-[10px] text-white/20 group-hover:text-[#ff6b1a] tracking-widest transition-colors duration-300">
+                <span className="font-mono text-[10px] text-slate-400 group-hover:text-[#ff6b1a] tracking-widest transition-colors duration-300">
                   {cat.num}
                 </span>
               </div>
 
               {/* Content */}
               <div className="flex-1 min-w-0 translate-x-0 group-hover:translate-x-1.5 transition-transform duration-500 ease-out">
-                <p className="font-sans text-[10px] text-white/30 group-hover:text-[#ff6b1a]/70 tracking-[0.4em] uppercase font-light mb-2 transition-colors duration-300">
+                <p className="font-sans text-[10px] text-slate-500 group-hover:text-[#ff6b1a] tracking-[0.4em] uppercase font-medium mb-2 transition-colors duration-300">
                   {cat.label}
                 </p>
-                <h3 className="font-sans text-xl md:text-2xl font-black text-white tracking-tighter mb-3 group-hover:text-white transition-colors duration-300">
+                <h3 className="font-sans text-xl md:text-2xl font-black text-slate-900 tracking-tighter mb-3 group-hover:text-black transition-colors duration-300">
                   {cat.title}
                 </h3>
-                <p className="font-sans text-sm text-white/35 group-hover:text-white/60 font-light leading-relaxed max-w-2xl transition-colors duration-300">
+                <p className="font-sans text-sm text-slate-600 group-hover:text-slate-800 font-normal leading-relaxed max-w-2xl transition-colors duration-300">
                   {cat.description}
                 </p>
 
-                <span className="mt-4 inline-flex items-center gap-1.5 text-[10px] text-white/20 group-hover:text-white/55 tracking-widest uppercase transition-colors duration-200">
+                <span className="mt-4 inline-flex items-center gap-1.5 text-[10px] text-slate-400 group-hover:text-slate-700 tracking-widest uppercase transition-colors duration-200 font-medium">
                   View Projects
                   <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
                     <path d="M2 8L8 2M8 2H4M8 2v4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
@@ -167,7 +167,7 @@ export default function Work() {
               </div>
 
               {/* Icon */}
-              <div className="hidden md:flex shrink-0 items-center pt-2 text-white">
+              <div className="hidden md:flex shrink-0 items-center pt-2 text-slate-600 group-hover:text-slate-900 transition-colors">
                 {cat.icon}
               </div>
             </Link>
@@ -176,21 +176,21 @@ export default function Work() {
           {/* 4th item — View Full Projects CTA */}
           <Link
             href="/projects"
-            className="work-item group relative flex items-center gap-8 py-10 md:py-14 border-b border-white/8 hover:border-white/20 transition-all duration-500"
+            className="work-item group relative flex items-center gap-8 py-10 md:py-14 border-b border-slate-200 hover:border-slate-400 hover:bg-white/40 transition-all duration-500"
           >
             <div className="absolute left-0 top-0 bottom-0 w-px bg-[#ff6b1a] origin-top scale-y-0 group-hover:scale-y-100 transition-transform duration-500 ease-out" />
             <div className="pl-3 shrink-0 w-8">
-              <span className="font-mono text-[10px] text-white/20 group-hover:text-[#ff6b1a] tracking-widest transition-colors duration-300">→</span>
+              <span className="font-mono text-[10px] text-slate-400 group-hover:text-[#ff6b1a] tracking-widest transition-colors duration-300">→</span>
             </div>
             <div className="flex-1 translate-x-0 group-hover:translate-x-1.5 transition-transform duration-500 ease-out">
-              <p className="font-sans text-[10px] text-white/30 group-hover:text-[#ff6b1a]/70 tracking-[0.4em] uppercase font-light mb-2 transition-colors duration-300">
+              <p className="font-sans text-[10px] text-slate-500 group-hover:text-[#ff6b1a] tracking-[0.4em] uppercase font-medium mb-2 transition-colors duration-300">
                 All Case Studies
               </p>
-              <h3 className="font-sans text-xl md:text-2xl font-black text-white tracking-tighter group-hover:text-white transition-colors duration-300">
+              <h3 className="font-sans text-xl md:text-2xl font-black text-slate-900 tracking-tighter group-hover:text-black transition-colors duration-300">
                 Explore All 11+ Projects & Systems
               </h3>
             </div>
-            <div className="hidden md:flex items-center gap-2 text-white/20 group-hover:text-[#ff6b1a] transition-colors duration-300 pr-2">
+            <div className="hidden md:flex items-center gap-2 text-slate-400 group-hover:text-[#ff6b1a] transition-colors duration-300 pr-2">
               <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
                 <path d="M6 14h16M16 8l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
