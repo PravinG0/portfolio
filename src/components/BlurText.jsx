@@ -126,7 +126,7 @@ const BlurText = ({
             }
           >
             {segment.isItalic ? (
-              <span className="font-serif italic text-white/90">{segment.word}</span>
+              <span className="font-serif italic text-[#ff8c42] font-medium">{segment.word}</span>
             ) : (
               segment.word
             )}

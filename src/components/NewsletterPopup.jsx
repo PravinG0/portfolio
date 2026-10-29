@@ -11,7 +11,12 @@ export default function NewsletterPopup() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    if (pathname?.startsWith("/admin")) return;
+    if (
+      pathname?.startsWith("/admin") ||
+      pathname?.startsWith("/projects") ||
+      pathname?.startsWith("/work") ||
+      pathname?.startsWith("/project/")
+    ) return;
 
     const hasSubscribed = localStorage.getItem("newsletter_subscribed");
     const hasSeen = localStorage.getItem("newsletter_seen");

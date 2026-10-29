@@ -12,7 +12,7 @@ const renderParsedText = (text) => {
   return parts.map((part, index) => {
     if (index % 2 === 1) {
       return (
-        <span key={index} className="font-serif italic text-white/90">
+        <span key={index} className="font-serif italic text-[#ff8c42] font-medium">
           {part}
         </span>
       );
@@ -157,16 +157,18 @@ export default function AboutPage() {
           </div>
 
           {/* Right: Text Info */}
-          <div className="flex flex-col items-start text-left">
-            <p className="ap-label text-[10px] text-[#ff6b1a] tracking-[0.5em] uppercase mb-4 font-medium">
+          <div className="flex flex-col items-start text-left bg-[#08080b]/85 backdrop-blur-2xl border border-white/[0.1] rounded-3xl p-8 lg:p-10 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
+            <div className="absolute -top-24 -left-24 w-48 h-48 bg-[#ff6b1a]/15 rounded-full blur-3xl pointer-events-none" />
+            <p className="ap-label text-[11px] text-[#ff6b1a] tracking-[0.4em] uppercase mb-4 font-mono font-medium">
               {SECTION.label}
             </p>
-            <h1 className="ap-h font-black tracking-tighter leading-[0.88] mb-8" style={{ fontSize: "clamp(2.2rem, 4.5vw, 4.5rem)" }}>
+            <h1 className="ap-h font-black tracking-tight leading-[0.9] mb-8 text-white" style={{ fontSize: "clamp(2.2rem, 4.5vw, 4.5rem)" }}>
               <span className="block text-white">{HEADING.line1}</span>
               <span className="block text-white">{HEADING.line2}</span>
               <span className="block ghost">{HEADING.line3}</span>
             </h1>
-            <div className="space-y-5 text-sm text-white/50 font-light leading-relaxed mb-8 pr-4">
+            <div className="space-y-4 text-sm sm:text-[15px] text-white/85 font-normal leading-relaxed mb-8">
               {BIO.map((text, i) => (
                 <p key={i}>
                   {renderParsedText(text)}
@@ -174,44 +176,54 @@ export default function AboutPage() {
               ))}
             </div>
             <a href={RESUME_URL} target="_blank" rel="noopener noreferrer"
-              className="ap-bio inline-flex items-center gap-2 px-6 py-3 border border-[#ff6b1a]/30 text-[#ff6b1a] text-[10px] font-bold uppercase tracking-widest rounded-full hover:bg-[#ff6b1a] hover:text-black transition-colors duration-300"
+              className="ap-bio inline-flex items-center gap-2.5 px-7 py-3.5 bg-[#ff6b1a] hover:bg-[#ff8533] text-black text-xs font-bold uppercase tracking-[0.2em] rounded-full transition-all duration-300 shadow-xl hover:shadow-orange-500/25"
             >
               View Resume
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
             </a>
           </div>
         </div>
 
         {/* Bottom: Skills & Experience Grid */}
-        <div className="grid grid-cols-3 gap-12 pt-12 border-t border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-8 lg:p-10 bg-[#08080b]/85 backdrop-blur-2xl border border-white/[0.1] rounded-3xl shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none" />
           <div>
-            <p className="text-[10px] tracking-[0.4em] uppercase mb-4 text-[#ff6b1a]/80 font-medium">Tech I Work With</p>
+            <div className="flex items-center gap-2 pb-2.5 mb-4 border-b border-white/[0.08]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#ff6b1a]" />
+              <p className="text-[11px] font-mono tracking-[0.25em] uppercase text-white font-semibold">Tech I Work With</p>
+            </div>
             <div className="flex gap-2 flex-wrap">
               {TECH.map((s) => (
-                <span key={s.name} className="ap-skill px-3 py-1 flex items-center gap-1.5 bg-white/90 rounded-full text-[9px] text-black tracking-wider uppercase font-medium">
-                  <s.icon className="w-2.5 h-2.5" />{s.name}
+                <span key={s.name} className="ap-skill px-3 py-1.5 flex items-center gap-2 rounded-xl bg-white/[0.05] hover:bg-[#ff6b1a] border border-white/[0.09] hover:border-[#ff6b1a] text-xs font-mono font-medium text-white/90 hover:text-black transition-all duration-300 shadow-sm cursor-default">
+                  <s.icon className="w-3 h-3 text-[#ff6b1a] group-hover:text-black transition-colors" />{s.name}
                 </span>
               ))}
             </div>
           </div>
           <div>
-            <p className="text-[10px] tracking-[0.4em] uppercase mb-4 text-[#ff6b1a]/80 font-medium">Automation & Tools</p>
+            <div className="flex items-center gap-2 pb-2.5 mb-4 border-b border-white/[0.08]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#ff6b1a]" />
+              <p className="text-[11px] font-mono tracking-[0.25em] uppercase text-white font-semibold">Automation & Tools</p>
+            </div>
             <div className="flex gap-2 flex-wrap">
               {CREATIVE.map((s) => (
-                <span key={s.name} className="ap-skill px-3 py-1 flex items-center gap-1.5 bg-white/10 rounded-full text-[9px] text-white tracking-wider uppercase font-medium border border-white/10">
-                  <s.icon className="w-2.5 h-2.5 text-[#ff6b1a]" />{s.name}
+                <span key={s.name} className="ap-skill px-3 py-1.5 flex items-center gap-2 rounded-xl bg-white/[0.05] hover:bg-[#ff6b1a] border border-white/[0.09] hover:border-[#ff6b1a] text-xs font-mono font-medium text-white/90 hover:text-black transition-all duration-300 shadow-sm cursor-default">
+                  <s.icon className="w-3 h-3 text-[#ff6b1a] group-hover:text-black transition-colors" />{s.name}
                 </span>
               ))}
             </div>
           </div>
           <div>
-            <p className="text-[10px] tracking-[0.4em] uppercase mb-4 text-[#ff6b1a]/80 font-medium">Career Timeline</p>
-            <div className="flex flex-col gap-4">
+            <div className="flex items-center gap-2 pb-2.5 mb-4 border-b border-white/[0.08]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#ff6b1a]" />
+              <p className="text-[11px] font-mono tracking-[0.25em] uppercase text-white font-semibold">Career Timeline</p>
+            </div>
+            <div className="flex flex-col gap-3.5">
               {EXPERIENCE.map((exp, i) => (
-                <div key={i} className="ap-skill border-l-2 border-[#ff6b1a]/40 pl-4 py-1">
-                  <p className="text-white/90 text-[12px] font-semibold tracking-wide">{exp.role}</p>
+                <div key={i} className="ap-skill p-3 rounded-xl bg-white/[0.03] border border-white/[0.06] hover:border-white/15 transition-all">
+                  <p className="text-white text-xs font-bold">{exp.role}</p>
                   <p className="text-[#ff6b1a] text-[11px] font-medium">{exp.company}</p>
-                  <p className="text-white/40 text-[9px] tracking-widest uppercase mt-0.5">{exp.period}</p>
+                  <p className="text-white/45 text-[9px] font-mono tracking-widest uppercase mt-0.5">{exp.period?.split('·')[0]}</p>
                 </div>
               ))}
             </div>

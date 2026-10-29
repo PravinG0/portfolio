@@ -29,8 +29,10 @@ function autoBind(instance) {
 function createTextTexture(gl, text, font = 'bold 30px monospace', color = 'black') {
   const canvas = document.createElement('canvas');
   const context = canvas.getContext('2d');
+  // Truncate long titles to prevent WebGL planes from overlapping neighboring cards
+  const cleanText = text && text.length > 22 ? text.slice(0, 20).trim() + "…" : (text || "");
   context.font = font;
-  const metrics = context.measureText(text);
+  const metrics = context.measureText(cleanText);
   const textWidth = Math.ceil(metrics.width);
   const sizeMatch = font.match(/(\d+)px/);
   const fontSize = sizeMatch ? parseInt(sizeMatch[1], 10) : 30;
@@ -52,7 +54,7 @@ function createTextTexture(gl, text, font = 'bold 30px monospace', color = 'blac
   context.textBaseline = 'middle';
   context.textAlign = 'center';
   context.clearRect(0, 0, canvas.width, canvas.height);
-  context.fillText(text, canvas.width / 2, canvas.height / 2);
+  context.fillText(cleanText, canvas.width / 2, canvas.height / 2);
   const texture = new Texture(gl, { generateMipmaps: false });
   texture.image = canvas;
   return { texture, width: canvas.width, height: canvas.height };
@@ -331,7 +333,17 @@ class App {
   }
   createMedias(items, bend = 1, textColor, borderRadius, font) {
     const galleryItems = items || [];
-    this.mediasImages = galleryItems.concat(galleryItems);
+    this.originalItemCount = galleryItems.length;
+    let list = [...galleryItems];
+    if (list.length > 0) {
+      // Pad to at least 8 items so circular ring calculation never collapses with 1 or 2 items
+      while (list.length < 8) {
+        list = list.concat(galleryItems);
+      }
+      this.mediasImages = list.concat(list);
+    } else {
+      this.mediasImages = [];
+    }
     this.medias = this.mediasImages.map((data, index) => {
       return new Media({
         geometry: this.planeGeometry, gl: this.gl, image: data.image,
@@ -365,7 +377,7 @@ class App {
     this.onCheck();
   }
   handleClick(clientX, clientY) {
-    if (!this.medias || !this.medias.length) return;
+    if (!this.medias || !this.medias.length || !this.originalItemCount) return;
     const rect = this.gl.canvas.getBoundingClientRect();
     const ndcX = ((clientX - rect.left) / rect.width) * 2 - 1;
     const ndcY = -(((clientY - rect.top) / rect.height) * 2 - 1);
@@ -387,8 +399,7 @@ class App {
       }
     }
     if (closest) {
-      const originalLen = this.medias.length / 2;
-      const idx = closest.index % originalLen;
+      const idx = closest.index % this.originalItemCount;
       this.onItemClick(idx);
     }
   }

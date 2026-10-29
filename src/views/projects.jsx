@@ -1,19 +1,21 @@
 "use client";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
+import { 
+  FiSearch, FiX, FiExternalLink, FiArrowRight, FiGrid, 
+  FiLayers, FiChevronLeft, FiChevronRight, FiCode, FiCpu, 
+  FiActivity, FiBox, FiServer, FiGlobe, FiCheckCircle
+} from "react-icons/fi";
+import { FALLBACK_PROJECTS } from "@/app/work/content";
 
 const CircularGallery = dynamic(
   () => import("@/components/CircularGallery/CircularGallery"),
   { ssr: false }
 );
 
-
-
-function slugify(t) {
-  return t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-}
 function safeUrl(url) {
   if (!url) return url;
   return /^https?:\/\//i.test(url) ? url : `https://${url}`;
@@ -21,410 +23,695 @@ function safeUrl(url) {
 
 const NOISE_SVG = `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`;
 
-/* ─── Magnetic CTA ─── */
-function MagneticCTA({ href, children }) {
-  const ref = useRef(null);
-  return (
-    <a ref={ref} href={safeUrl(href)} target="_blank" rel="noopener noreferrer"
-      onMouseMove={(e) => {
-        const b = ref.current.getBoundingClientRect();
-        ref.current.style.transform = `translate(${(e.clientX - b.left - b.width / 2) * 0.25}px,${(e.clientY - b.top - b.height / 2) * 0.25}px)`;
-      }}
-      onMouseLeave={() => { ref.current.style.transform = "translate(0,0)"; }}
-      className="inline-flex items-center gap-3 px-7 py-3.5 bg-[#ff6b1a] text-black font-black rounded-xl text-[10px] uppercase tracking-[0.25em] hover:bg-[#ff8c42] will-change-transform"
-      style={{ transition: "transform 0.2s cubic-bezier(.23,1,.32,1), background-color 0.3s" }}
-    >
-      {children}
-      <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-        <path d="M3.5 9.5L9.5 3.5M9.5 3.5H5.5M9.5 3.5v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      </svg>
-    </a>
-  );
-}
+// Accent colors and icons for project categories
+const DOMAIN_METAS = {
+  "edgeone": {
+    accent: "#00d4ff",
+    bgGradient: "from-[#002b4d]/40 via-[#001726]/30 to-[#080808]",
+    tag: "Edge AI & IoT",
+    icon: FiCpu
+  },
+  "onecare-rpm": {
+    accent: "#00e5a3",
+    bgGradient: "from-[#003d2b]/40 via-[#001f16]/30 to-[#080808]",
+    tag: "MedTech / RPM",
+    icon: FiActivity
+  },
+  "onedata-corp": {
+    accent: "#a855f7",
+    bgGradient: "from-[#320b57]/40 via-[#18052b]/30 to-[#080808]",
+    tag: "Corporate Software",
+    icon: FiLayers
+  },
+  "enterprise-automation": {
+    accent: "#ff6b1a",
+    bgGradient: "from-[#4d1f00]/40 via-[#260f00]/30 to-[#080808]",
+    tag: "Power Automate",
+    icon: FiCpu
+  },
+  "upskilled-ai": {
+    accent: "#f43f5e",
+    bgGradient: "from-[#4d0017]/40 via-[#26000c]/30 to-[#080808]",
+    tag: "AI & SEO Audit",
+    icon: FiGlobe
+  },
+  "tekedge-plugins": {
+    accent: "#f59e0b",
+    bgGradient: "from-[#4d3200]/40 via-[#261900]/30 to-[#080808]",
+    tag: "Custom Plugins",
+    icon: FiBox
+  },
+  "pulse-v2": {
+    accent: "#ff8c00",
+    bgGradient: "from-[#4d2600]/40 via-[#261300]/30 to-[#080808]",
+    tag: "AWS Cloud & S3",
+    icon: FiServer
+  },
+  "hireone": {
+    accent: "#3b82f6",
+    bgGradient: "from-[#0d2859]/40 via-[#06142e]/30 to-[#080808]",
+    tag: "Recruitment Portal",
+    icon: FiGlobe
+  },
+  "zts-systems": {
+    accent: "#06b6d4",
+    bgGradient: "from-[#04333d]/40 via-[#02191e]/30 to-[#080808]",
+    tag: "Custom Themes",
+    icon: FiCode
+  },
+  "anuvic-stores": {
+    accent: "#10b981",
+    bgGradient: "from-[#033b24]/40 via-[#011c11]/30 to-[#080808]",
+    tag: "WooCommerce",
+    icon: FiBox
+  },
+  "hcl-infrastructure": {
+    accent: "#8b5cf6",
+    bgGradient: "from-[#290d59]/40 via-[#14062e]/30 to-[#080808]",
+    tag: "Network IT Ops",
+    icon: FiServer
+  }
+};
 
-/* ─── Fullscreen Showcase ─── */
-function ProjectShowcase({ items, startIdx, onClose }) {
-  const [idx, setIdx] = useState(startIdx);
-  const [dir, setDir] = useState(1);
-  const locked = useRef(false);
-  const touchY = useRef(0);
-  const imgRef = useRef(null);
+/* ─── Fullscreen Quick Showcase Modal ─── */
+function ProjectShowcaseModal({ items, currentIdx, onClose, onSelect }) {
+  const current = items[currentIdx];
+  const meta = DOMAIN_METAS[current?.id] || { accent: "#ff6b1a", tag: "System", icon: FiLayers };
   const router = useRouter();
-  const current = items[idx];
-
-  const go = useCallback((next) => {
-    if (next < 0 || next >= items.length || locked.current || next === idx) return;
-    locked.current = true;
-    setDir(next > idx ? 1 : -1);
-    setIdx(next);
-    setTimeout(() => { locked.current = false; }, 700);
-  }, [items, idx]);
 
   useEffect(() => {
-    const onWheel = (e) => { e.preventDefault(); if (!locked.current) { if (e.deltaY > 25) go(idx + 1); else if (e.deltaY < -25) go(idx - 1); } };
-    const onTS = (e) => { touchY.current = e.touches[0].clientY; };
-    const onTE = (e) => { const d = touchY.current - e.changedTouches[0].clientY; if (Math.abs(d) > 40) go(d > 0 ? idx + 1 : idx - 1); };
-    const onKey = (e) => {
-      if (e.key === "ArrowDown" || e.key === "j") go(idx + 1);
-      else if (e.key === "ArrowUp" || e.key === "k") go(idx - 1);
-      else if (e.key === "Escape") onClose();
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+        onSelect((currentIdx + 1) % items.length);
+      }
+      if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+        onSelect((currentIdx - 1 + items.length) % items.length);
+      }
     };
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("touchstart", onTS, { passive: true });
-    window.addEventListener("touchend", onTE, { passive: true });
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("touchstart", onTS);
-      window.removeEventListener("touchend", onTE);
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [go, idx, onClose]);
-
-  const slideV = {
-    enter: (d) => ({ y: d > 0 ? "8%" : "-8%", opacity: 0 }),
-    center: { y: "0%", opacity: 1 },
-    exit: (d) => ({ y: d > 0 ? "-8%" : "8%", opacity: 0 }),
-  };
-  const imageV = { enter: { scale: 1.12, opacity: 0 }, center: { scale: 1.02, opacity: 1 }, exit: { scale: 0.95, opacity: 0 } };
-  const spring = { type: "tween", duration: 0.65, ease: [0.76, 0, 0.24, 1] };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentIdx, items.length, onClose, onSelect]);
 
   if (!current) return null;
 
+  const techList = current.tech ? current.tech.split(/·|,|;/).map(t => t.trim()).filter(Boolean) : [];
+  const servicesList = current.services || [];
+
   return (
-    <motion.div className="fixed inset-0 z-[100] bg-[#060606] overflow-hidden select-none"
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+      className="fixed inset-0 z-[150] bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 md:p-8"
+      onClick={onClose}
+    >
+      <div 
+        className="pointer-events-none fixed inset-0 opacity-[0.03] mix-blend-overlay"
+        style={{ backgroundImage: NOISE_SVG, backgroundRepeat: "repeat" }} 
+      />
 
-      {/* Noise */}
-      <div className="pointer-events-none fixed inset-0 z-[110] opacity-[0.03] mix-blend-overlay"
-        style={{ backgroundImage: NOISE_SVG, backgroundRepeat: "repeat" }} />
-      {/* Vignette */}
-      <div className="pointer-events-none fixed inset-0 z-[105]"
-        style={{ background: "radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.45) 100%)" }} />
+      <motion.div
+        initial={{ scale: 0.94, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.95, opacity: 0, y: 20 }}
+        transition={{ type: "spring", damping: 28, stiffness: 320 }}
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-5xl max-h-[90vh] bg-[#0c0c0e] border border-white/10 rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row"
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          aria-label="Close modal"
+          className="absolute top-4 right-4 z-30 p-2.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white/60 hover:text-white transition-all"
+        >
+          <FiX size={18} />
+        </button>
 
-      <AnimatePresence mode="wait" custom={dir}>
-        <motion.div key={idx} className="absolute inset-0 flex flex-col md:flex-row"
-          initial="enter" animate="center" exit="exit" custom={dir}>
+        {/* Visual Banner / Left Side */}
+        <div className={`relative w-full md:w-[45%] min-h-[260px] md:min-h-full bg-gradient-to-br ${meta.bgGradient || "from-white/5 to-[#080808]"} p-8 flex flex-col justify-between overflow-hidden border-b md:border-b-0 md:border-r border-white/10`}>
+          {/* Ambient glow */}
+          <div 
+            className="absolute -top-24 -left-24 w-72 h-72 rounded-full blur-3xl opacity-25 pointer-events-none"
+            style={{ backgroundColor: meta.accent }}
+          />
 
-          {/* Image */}
-          <motion.div className="relative w-full md:w-[56%] h-[42vh] md:h-full shrink-0 overflow-hidden cursor-crosshair"
-            variants={imageV} transition={{ ...spring, duration: 0.75 }}
-            onMouseMove={(e) => {
-              if (!imgRef.current) return;
-              const r = imgRef.current.getBoundingClientRect();
-              imgRef.current.style.transform = `scale(1.06) translate(${((e.clientX - r.left) / r.width - 0.5) * 12}px,${((e.clientY - r.top) / r.height - 0.5) * 8}px)`;
-            }}
-            onMouseLeave={() => { if (imgRef.current) imgRef.current.style.transform = "scale(1.02) translate(0,0)"; }}
-          >
-            {current.image ? (
-              (current.image.includes('.mp4') || current.image.includes('.webm') || current.image.includes('.mov')) ? (
-                <video ref={imgRef} src={current.image} className="w-full h-full object-cover will-change-transform" style={{ transform: "scale(1.02)", transition: "transform 0.4s cubic-bezier(.23,1,.32,1)" }} muted loop playsInline autoPlay />
-              ) : (
-                <img ref={imgRef} src={current.image} alt={current.text} className="w-full h-full object-cover will-change-transform" style={{ transform: "scale(1.02)", transition: "transform 0.4s cubic-bezier(.23,1,.32,1)" }} />
-              )
-            ) : (
-              <div className="w-full h-full bg-white/[0.03]" />
-            )}
-            <div className="absolute inset-0 hidden md:block" style={{ background: "linear-gradient(90deg, transparent 55%, #060606 100%)" }} />
-            <div className="absolute inset-0 md:hidden" style={{ background: "linear-gradient(180deg, transparent 40%, #060606 100%)" }} />
-          </motion.div>
+          <div className="relative z-10 flex items-center justify-between">
+            <span 
+              className="text-xs font-mono font-bold tracking-[0.25em] px-3 py-1 rounded-full border"
+              style={{ color: meta.accent, borderColor: `${meta.accent}40`, backgroundColor: `${meta.accent}15` }}
+            >
+              #{String(current.num || currentIdx + 1).padStart(2, "0")}
+            </span>
+            <span className="text-[10px] tracking-[0.2em] uppercase font-mono text-white/40">
+              {currentIdx + 1} / {items.length}
+            </span>
+          </div>
 
-          {/* Details */}
-          <motion.div className="flex-1 flex flex-col justify-center px-8 md:px-16 py-6 md:py-0 relative z-10"
-            variants={slideV} custom={dir} transition={spring}>
-
-            <motion.div className="flex items-center gap-3 mb-8"
-              initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
-              <span className="text-[#ff6b1a] font-mono text-xs font-black tracking-[0.3em]">{String(idx + 1).padStart(2, "0")}</span>
-              <div className="w-10 h-px bg-white/10" />
-              <span className="text-white/20 font-mono text-xs tracking-[0.3em]">{String(items.length).padStart(2, "0")}</span>
-            </motion.div>
-
-            <motion.span className="inline-block self-start px-3.5 py-1 rounded-full text-[8px] font-black uppercase tracking-[0.4em] mb-5 border"
-              style={{ background: "rgba(255,107,26,0.08)", borderColor: "rgba(255,107,26,0.15)", color: "#ff6b1a" }}
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.35 }}>
+          <div className="relative z-10 my-auto py-8 text-center md:text-left">
+            <div 
+              className="w-16 h-16 rounded-2xl mx-auto md:mx-0 flex items-center justify-center mb-6 border shadow-lg"
+              style={{ backgroundColor: `${meta.accent}15`, borderColor: `${meta.accent}30`, color: meta.accent }}
+            >
+              <meta.icon size={28} />
+            </div>
+            <p className="text-[11px] uppercase tracking-[0.3em] font-mono text-white/50 mb-2">
               {current.category}
-            </motion.span>
+            </p>
+            <h2 className="text-2xl md:text-3xl font-black text-white tracking-tight leading-snug">
+              {current.title}
+            </h2>
+          </div>
 
-            <motion.h1 className="font-black text-white leading-[0.95] tracking-[-0.04em] mb-5"
-              style={{ fontSize: "clamp(2rem, 4.5vw, 4.2rem)" }}
-              initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.6, ease: [0.76, 0, 0.24, 1] }}>
-              {current.text}
-            </motion.h1>
-
-            {current.description && (
-              <motion.p className="text-[13px] text-white/35 font-light leading-[1.8] mb-8 max-w-sm"
-                initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-                {current.description}
-              </motion.p>
-            )}
-
-            {current.tech && (
-              <motion.div className="flex flex-wrap gap-1.5 mb-8"
-                initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}>
-                {current.tech.split("·").map((t, i) => (
-                  <span key={i} className="px-3 py-1.5 bg-white/[0.03] border border-white/[0.06] rounded-lg text-[9px] text-white/30 tracking-[0.15em] uppercase">
-                    {t.trim()}
-                  </span>
-                ))}
-              </motion.div>
-            )}
-
-            <motion.div className="flex flex-wrap items-center gap-3" initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
-              {current.id && (
-                <button
-                  onClick={() => { onClose(); router.push(`/project/${current.id}`); }}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 border border-white/15 text-white/60 hover:text-white hover:border-white/40 rounded-full text-[9px] uppercase tracking-[0.3em] font-bold transition-all duration-200"
-                >
-                  Full Details
-                  <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 8L8 2M8 2H4M8 2v4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>
-                </button>
-              )}
-              {current.link && <MagneticCTA href={current.link}>View Live</MagneticCTA>}
-            </motion.div>
-
-            <motion.p className="mt-auto pt-6 text-[8px] text-white/10 tracking-[0.5em] uppercase"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }}>
-              {current.category} Collection · {items.length} works
-            </motion.p>
-          </motion.div>
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Side dots */}
-      <div className="fixed right-5 md:right-8 top-1/2 -translate-y-1/2 z-[120] flex flex-col items-center gap-3">
-        <button onClick={() => go(idx - 1)} disabled={idx === 0}
-          className={`p-2 rounded-full border backdrop-blur-sm transition-all duration-300 ${idx === 0 ? "border-white/[0.04] text-white/[0.08] cursor-default" : "border-white/10 text-white/30 hover:text-white hover:bg-white/5"}`}>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 7.5l3.5-3.5 3.5 3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
-        </button>
-        <div className="flex flex-col gap-[6px] py-2">
-          {items.map((_, i) => (
-            <button key={i} onClick={() => go(i)} title={items[i]?.text} className="flex items-center justify-center">
-              <motion.div className="rounded-full"
-                animate={{ width: i === idx ? 6 : 4, height: i === idx ? 18 : 4, backgroundColor: i === idx ? "#ff6b1a" : "rgba(255,255,255,0.12)" }}
-                transition={{ duration: 0.35, ease: [0.76, 0, 0.24, 1] }} />
+          <div className="relative z-10 flex items-center justify-between pt-4 border-t border-white/10">
+            <button
+              onClick={() => onSelect((currentIdx - 1 + items.length) % items.length)}
+              className="flex items-center gap-2 text-xs font-medium text-white/50 hover:text-white transition-colors"
+            >
+              <FiChevronLeft size={16} /> Prev
             </button>
-          ))}
+            <div className="flex gap-1.5">
+              {items.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => onSelect(i)}
+                  className="w-2 h-2 rounded-full transition-all"
+                  style={{
+                    backgroundColor: i === currentIdx ? meta.accent : "rgba(255,255,255,0.15)",
+                    transform: i === currentIdx ? "scale(1.2)" : "scale(1)"
+                  }}
+                />
+              ))}
+            </div>
+            <button
+              onClick={() => onSelect((currentIdx + 1) % items.length)}
+              className="flex items-center gap-2 text-xs font-medium text-white/50 hover:text-white transition-colors"
+            >
+              Next <FiChevronRight size={16} />
+            </button>
+          </div>
         </div>
-        <button onClick={() => go(idx + 1)} disabled={idx === items.length - 1}
-          className={`p-2 rounded-full border backdrop-blur-sm transition-all duration-300 ${idx === items.length - 1 ? "border-white/[0.04] text-white/[0.08] cursor-default" : "border-white/10 text-white/30 hover:text-white hover:bg-white/5"}`}>
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5l3.5 3.5 3.5-3.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" /></svg>
-        </button>
-      </div>
 
-      {/* Close */}
-      <button onClick={onClose}
-        className="fixed top-6 left-6 md:left-auto md:right-20 z-[120] flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 text-white/30 hover:text-white hover:bg-white/5 text-[9px] tracking-[0.4em] uppercase transition-all backdrop-blur-sm">
-        <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-          <path d="M1.5 1.5l7 7M8.5 1.5l-7 7" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
-        </svg>
-        Close
-      </button>
+        {/* Content Details / Right Side */}
+        <div className="w-full md:w-[55%] p-6 md:p-10 flex flex-col justify-between overflow-y-auto max-h-[60vh] md:max-h-full">
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-2 h-2 rounded-full" style={{ backgroundColor: meta.accent }} />
+              <span className="text-[10px] tracking-[0.25em] font-mono uppercase text-white/40">
+                Case Study Overview
+              </span>
+            </div>
 
-      <div className="fixed bottom-5 right-24 z-[120] hidden md:flex items-center gap-3">
-        <span className="text-[7px] text-white/10 tracking-[0.4em] uppercase">↑↓ Navigate</span>
-        <div className="w-px h-2.5 bg-white/[0.06]" />
-        <span className="text-[7px] text-white/10 tracking-[0.4em] uppercase">ESC Close</span>
-      </div>
+            <p className="text-white/70 text-sm md:text-base font-light leading-relaxed mb-6">
+              {current.description}
+            </p>
+
+            {/* Deliverables */}
+            {servicesList.length > 0 && (
+              <div className="mb-6">
+                <p className="text-[10px] tracking-[0.3em] uppercase font-mono text-white/40 mb-3">
+                  Key Deliverables & Architecture
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {servicesList.map((svc, i) => (
+                    <div key={i} className="flex items-center gap-2.5 text-xs text-white/80 bg-white/[0.02] border border-white/[0.05] p-2.5 rounded-lg">
+                      <FiCheckCircle size={13} style={{ color: meta.accent }} className="shrink-0" />
+                      <span className="truncate">{svc}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Tech Stack */}
+            {techList.length > 0 && (
+              <div className="mb-8">
+                <p className="text-[10px] tracking-[0.3em] uppercase font-mono text-white/40 mb-3">
+                  Technologies Applied
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {techList.map((t, i) => (
+                    <span 
+                      key={i} 
+                      className="px-3 py-1 bg-white/[0.04] border border-white/[0.08] rounded-md text-[10px] tracking-[0.1em] font-mono text-white/60 uppercase"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Action CTAs */}
+          <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
+            {current.id && (
+              <button
+                onClick={() => {
+                  onClose();
+                  router.push(`/project/${current.id}`);
+                }}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-[#ff6b1a] hover:bg-[#ff8533] text-black font-bold rounded-xl text-xs uppercase tracking-[0.2em] transition-all shadow-lg hover:shadow-orange-500/20"
+              >
+                Full Case Study <FiArrowRight size={14} />
+              </button>
+            )}
+
+            {current.link && (
+              <a
+                href={safeUrl(current.link)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-3 border border-white/15 hover:border-white/40 text-white/80 hover:text-white rounded-xl text-xs uppercase tracking-[0.2em] font-medium transition-all bg-white/[0.02]"
+              >
+                Live Preview <FiExternalLink size={14} />
+              </a>
+            )}
+          </div>
+        </div>
+      </motion.div>
     </motion.div>
   );
 }
 
 /* ═══════════════════════════════════════════════
-   MAIN PROJECTS PAGE — CircularGallery + Showcase
+   MAIN PROJECTS PAGE COMPONENT
    ═══════════════════════════════════════════════ */
 export default function ProjectsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [items, setItems] = useState(null);
-  const [allFull, setAllFull] = useState(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-
   const catParam = searchParams.get("cat");
-  // Normalize mapping: "wordpress" -> "WORDPRESS", "automation" -> "AUTOMATION", etc.
-  const getInitialCategory = () => {
-    if (!catParam) return "ALL";
-    const c = catParam.toLowerCase();
-    if (c.includes("word") || c.includes("site") || c.includes("react") || c.includes("corp")) return "WORDPRESS";
-    if (c.includes("auto") || c.includes("power") || c.includes("sharepoint") || c.includes("teams")) return "AUTOMATION";
-    if (c.includes("health") || c.includes("patient") || c.includes("rpm") || c.includes("medical")) return "HEALTHCARE";
-    if (c.includes("plug") || c.includes("cloud") || c.includes("aws") || c.includes("tool")) return "PLUGINS";
-    return "ALL";
-  };
-  
-  const [activeCategory, setActiveCategory] = useState(getInitialCategory());
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState("ALL");
+  const [viewMode, setViewMode] = useState("grid"); // "grid" | "3d"
+  const [showcaseIdx, setShowcaseIdx] = useState(null);
+  const [works, setWorks] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Load projects from API or fallback
   useEffect(() => {
     fetch("/api/works")
-      .then((r) => r.ok ? r.json() : [])
+      .then((r) => r.ok ? r.json() : FALLBACK_PROJECTS)
       .then((data) => {
         if (data && data.length > 0) {
-          const normalizeCategory = (cat) => {
-            const c = (cat || "").toLowerCase();
-            if (c.includes("auto") || c.includes("power") || c.includes("sharepoint") || c.includes("teams")) return "Automation";
-            if (c.includes("health") || c.includes("patient") || c.includes("rpm") || c.includes("medical")) return "Healthcare";
-            if (c.includes("plug") || c.includes("cloud") || c.includes("aws") || c.includes("tool")) return "Plugins";
-            return "WordPress";
-          };
-          const mapped = data.map((p) => ({
-            id: p.id,
-            image: p.image_url || `https://picsum.photos/seed/${p.id}/800/600?grayscale`,
-            text: p.title,
-            category: normalizeCategory(p.category),
-            description: p.description,
-            tech: p.tech,
-            link: p.link,
-          }));
-          setAllFull(mapped);
+          setWorks(data);
         } else {
-          setAllFull([]);
+          setWorks(FALLBACK_PROJECTS);
         }
       })
-      .catch(() => {
-        setAllFull([]);
-      });
+      .catch(() => setWorks(FALLBACK_PROJECTS))
+      .finally(() => setLoading(false));
   }, []);
 
-  const [spinRequest, setSpinRequest] = useState({ index: 0, timestamp: 0 });
-  const [filteredFull, setFilteredFull] = useState(null);
-
-  // Rebuild gallery items whenever allFull or activeCategory changes
-  useEffect(() => {
-    if (!allFull) return;
-    const filtered = activeCategory === "ALL"
-      ? allFull
-      : allFull.filter(p => (p.category || "").toLowerCase() === activeCategory.toLowerCase());
-    const display = filtered;
-    setFilteredFull(display);
-    setItems(display.map(p => ({ image: p.image, text: p.text })));
-    setSpinRequest({ index: 0, timestamp: Date.now() });
-  }, [allFull, activeCategory]);
-
-  const handleCategoryClick = (cat) => {
-    setActiveCategory(cat);
+  // Category normalization mapping
+  const normalizeCatKey = (cat) => {
+    const c = (cat || "").toLowerCase();
+    if (c.includes("auto") || c.includes("power") || c.includes("sharepoint") || c.includes("teams")) return "AUTOMATION";
+    if (c.includes("health") || c.includes("patient") || c.includes("rpm") || c.includes("medical")) return "HEALTHCARE";
+    if (c.includes("plug") || c.includes("tool") || c.includes("custom plugin")) return "PLUGINS";
+    if (c.includes("cloud") || c.includes("aws") || c.includes("infra") || c.includes("network") || c.includes("switch")) return "CLOUD_OPS";
+    return "WORDPRESS";
   };
 
-  const handleItemClick = useCallback((idx) => {
-    const pool = filteredFull || allFull;
-    if (!pool || !pool[idx]) return;
-    const item = pool[idx];
-    if (item.id) {
-      router.push(`/project/${item.id}`);
+  // Sync category param if present in URL
+  useEffect(() => {
+    if (catParam) {
+      const c = catParam.toUpperCase();
+      if (["WORDPRESS", "AUTOMATION", "HEALTHCARE", "PLUGINS", "CLOUD_OPS"].includes(c)) {
+        setActiveCategory(c);
+      }
     }
-  }, [filteredFull, allFull, router]);
+  }, [catParam]);
 
-  const categories = ["ALL", "WORDPRESS", "AUTOMATION", "HEALTHCARE", "PLUGINS"];
+  const categories = [
+    { id: "ALL", label: "All Projects" },
+    { id: "WORDPRESS", label: "WordPress & React" },
+    { id: "AUTOMATION", label: "Power Automate" },
+    { id: "HEALTHCARE", label: "Healthcare / RPM" },
+    { id: "PLUGINS", label: "Plugins & Tools" },
+    { id: "CLOUD_OPS", label: "Cloud & Ops" }
+  ];
+
+  // Filter projects by category and search query
+  const filteredProjects = useMemo(() => {
+    return works.filter((p) => {
+      const catKey = normalizeCatKey(p.category);
+      const matchesCategory = activeCategory === "ALL" || catKey === activeCategory;
+      if (!matchesCategory) return false;
+
+      if (!searchQuery.trim()) return true;
+      const q = searchQuery.toLowerCase();
+      const titleMatch = (p.title || "").toLowerCase().includes(q);
+      const descMatch = (p.description || "").toLowerCase().includes(q);
+      const techMatch = (p.tech || "").toLowerCase().includes(q);
+      const catMatch = (p.category || "").toLowerCase().includes(q);
+      return titleMatch || descMatch || techMatch || catMatch;
+    });
+  }, [works, activeCategory, searchQuery]);
+
+  // Gallery items for 3D view
+  const galleryItems = useMemo(() => {
+    return filteredProjects.map((p) => {
+      // Short clean label for 3D card
+      const shortTitle = p.title.split("—")[0].trim();
+      return {
+        image: p.image_url || "/photo/project.webp",
+        text: shortTitle.length > 20 ? shortTitle.slice(0, 18) + "…" : shortTitle,
+        id: p.id
+      };
+    });
+  }, [filteredProjects]);
+
+  const handleGalleryClick = useCallback((idx) => {
+    if (idx >= 0 && idx < filteredProjects.length) {
+      setShowcaseIdx(idx);
+    }
+  }, [filteredProjects]);
 
   return (
-    <>
-      <section className="relative w-full overflow-hidden" style={{ height: "100svh" }}>
-        {/* Gallery */}
-        <div className="absolute inset-0">
-          {items !== null && items.length > 0 ? (
-            <CircularGallery
-              key={activeCategory}
-              items={items}
-              bend={3}
-              textColor="gradient"
-              borderRadius={0.05}
-              font="500 40px 'Inter', sans-serif"
-              scrollSpeed={2}
-              scrollEase={0.05}
-              onItemClick={handleItemClick}
-              activeIndex={0}
-              spinTimestamp={spinRequest.timestamp}
-            />
-          ) : items !== null && items.length === 0 ? (
-            <div className="flex items-center justify-center w-full h-full text-white/30 text-xs tracking-[0.3em] uppercase">
-              No projects found in this category.
-            </div>
-          ) : null}
-        </div>
+    <div className="relative min-h-screen bg-[#080808] text-white pt-28 pb-24 px-4 sm:px-8 md:px-14 lg:px-20 selection:bg-[#ff6b1a] selection:text-black">
+      
+      {/* Background ambient lighting */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-20 left-1/4 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-[130px]" />
+        <div className="absolute bottom-40 right-1/4 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[150px]" />
+      </div>
 
-        {/* Top fade */}
-        <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-[#080808] via-[#080808]/70 to-transparent pointer-events-none z-10" />
-
-        {/* Heading — desktop only */}
-        <div className="hidden md:block absolute top-0 left-0 px-6 md:px-20 pt-24 md:pt-28 pointer-events-none z-20">
-          <p className="font-sans text-[10px] text-[#ff6b1a] tracking-[0.5em] uppercase mb-2 md:mb-3 font-medium">
-            Creative
-          </p>
-          <h1
-            className="font-sans font-black tracking-tighter text-white leading-none"
-            style={{ fontSize: "clamp(2rem, 8vw, 8rem)" }}
+      <div className="relative z-10 max-w-7xl mx-auto">
+        
+        {/* ─── Hero Header ─── */}
+        <div className="mb-10 md:mb-14">
+          <motion.div 
+            initial={{ opacity: 0, y: 15 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.5 }}
+            className="flex items-center gap-3 mb-4"
           >
-            Archive.
-          </h1>
-        </div>
-
-        {/* Mobile: section title in top nav area */}
-        <div className="md:hidden absolute top-0 left-0 right-0 px-6 pt-20 pointer-events-none z-20 flex items-center justify-between">
-          <div>
-            <p className="text-[9px] text-[#ff6b1a] tracking-[0.4em] uppercase font-medium">Creative</p>
-            <p className="text-white font-black tracking-tighter text-2xl leading-none">
-              {activeCategory === "ALL" ? "Archive." : activeCategory.charAt(0) + activeCategory.slice(1).toLowerCase()}
+            <span className="w-2 h-2 rounded-full bg-[#ff6b1a] animate-pulse" />
+            <p className="text-[10px] md:text-xs font-mono uppercase tracking-[0.4em] text-[#ff6b1a] font-semibold">
+              Selected Work & Production Systems
             </p>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="flex flex-col lg:flex-row lg:items-end justify-between gap-6"
+          >
+            <div>
+              <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight leading-[0.95] text-white">
+                Projects <span className="text-[#ff6b1a]">Archive.</span>
+              </h1>
+              <p className="text-white/50 text-sm sm:text-base font-light max-w-2xl mt-4 leading-relaxed">
+                Production-engineered WordPress websites, enterprise Power Automate workflows, custom plugins, and healthcare medical device portals developed by Pravin G.
+              </p>
+            </div>
+
+            {/* Quick Metrics Bar */}
+            <div className="flex items-center gap-6 py-3 px-6 rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md self-start lg:self-auto shrink-0">
+              <div>
+                <p className="text-2xl font-black text-white font-mono leading-none">11+</p>
+                <p className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 mt-1">Systems</p>
+              </div>
+              <div className="w-px h-8 bg-white/10" />
+              <div>
+                <p className="text-2xl font-black text-[#ff6b1a] font-mono leading-none">13+</p>
+                <p className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 mt-1">Industries</p>
+              </div>
+              <div className="w-px h-8 bg-white/10" />
+              <div>
+                <p className="text-2xl font-black text-white font-mono leading-none">100%</p>
+                <p className="text-[9px] uppercase tracking-[0.2em] font-mono text-white/40 mt-1">Production</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* ─── Filter & Toolbar ─── */}
+        <div className="sticky top-[72px] z-40 mb-10 py-4 bg-[#080808]/90 backdrop-blur-xl border-y border-white/[0.08] flex flex-col md:flex-row md:items-center justify-between gap-4">
+          
+          {/* Categories Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+            {categories.map((cat) => {
+              const count = cat.id === "ALL" 
+                ? works.length 
+                : works.filter(w => normalizeCatKey(w.category) === cat.id).length;
+              const isActive = activeCategory === cat.id;
+
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`relative px-4 py-2 rounded-xl text-xs font-mono font-medium uppercase tracking-[0.15em] transition-all whitespace-nowrap flex items-center gap-2 ${
+                    isActive 
+                      ? "text-black bg-[#ff6b1a] font-bold shadow-md shadow-orange-500/20" 
+                      : "text-white/60 hover:text-white bg-white/[0.03] hover:bg-white/[0.06] border border-white/[0.06]"
+                  }`}
+                >
+                  <span>{cat.label}</span>
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${isActive ? "bg-black/20 text-black" : "bg-white/10 text-white/40"}`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
-        </div>
 
-        {/* Filters — desktop: top right | mobile: bottom bar */}
-        <div className="hidden md:flex absolute top-[8.5rem] right-20 z-30 gap-6 items-center pointer-events-auto">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => handleCategoryClick(cat)}
-              className={`text-[11px] uppercase tracking-[0.2em] font-bold transition-all duration-300 relative ${activeCategory === cat ? "text-[#ff6b1a]" : "text-white/40 hover:text-white"}`}
-            >
-              {cat}
-              {activeCategory === cat && (
-                <motion.div layoutId="activeFilter" className="absolute -bottom-2 left-0 right-0 h-0.5 bg-[#ff6b1a]" />
+          {/* Right Controls: Search & View Mode Switcher */}
+          <div className="flex items-center gap-3 w-full md:w-auto">
+            {/* Search Box */}
+            <div className="relative flex-1 md:w-64">
+              <FiSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40" size={14} />
+              <input
+                type="text"
+                placeholder="Search tech, title, tools..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-white/[0.03] border border-white/[0.08] focus:border-[#ff6b1a] rounded-xl pl-9 pr-8 py-2 text-xs text-white placeholder-white/30 outline-none transition-all"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white"
+                >
+                  <FiX size={14} />
+                </button>
               )}
-            </button>
-          ))}
-        </div>
+            </div>
 
-        {/* Mobile filters — bottom */}
-        <div className="md:hidden absolute bottom-[6vh] left-0 right-0 z-30 flex justify-center gap-4 px-4 pointer-events-auto">
-          <div className="flex items-center gap-3 bg-black/60 backdrop-blur-md border border-white/10 rounded-full px-5 py-2.5">
-            {categories.map((cat) => (
+            {/* View Mode Toggle */}
+            <div className="flex items-center bg-white/[0.03] border border-white/[0.08] p-1 rounded-xl shrink-0">
               <button
-                key={cat}
-                onClick={() => handleCategoryClick(cat)}
-                className={`text-[9px] uppercase tracking-[0.15em] font-bold transition-all duration-200 relative ${
-                  activeCategory === cat ? "text-[#ff6b1a]" : "text-white/35 hover:text-white"
+                onClick={() => setViewMode("grid")}
+                title="Grid View"
+                className={`p-2 rounded-lg text-xs flex items-center gap-1.5 transition-all ${
+                  viewMode === "grid" 
+                    ? "bg-[#ff6b1a] text-black font-bold shadow-sm" 
+                    : "text-white/50 hover:text-white"
                 }`}
               >
-                {cat}
-                {activeCategory === cat && (
-                  <motion.div layoutId="activeFilterMobile" className="absolute -bottom-1.5 left-0 right-0 h-[1.5px] bg-[#ff6b1a]" />
-                )}
+                <FiGrid size={15} />
+                <span className="hidden sm:inline text-[11px] uppercase tracking-wider">Grid</span>
               </button>
-            ))}
+              <button
+                onClick={() => setViewMode("3d")}
+                title="3D Orbit View"
+                className={`p-2 rounded-lg text-xs flex items-center gap-1.5 transition-all ${
+                  viewMode === "3d" 
+                    ? "bg-[#ff6b1a] text-black font-bold shadow-sm" 
+                    : "text-white/50 hover:text-white"
+                }`}
+              >
+                <FiLayers size={15} />
+                <span className="hidden sm:inline text-[11px] uppercase tracking-wider">3D Ring</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* Simple Drag / Swipe Indicator — desktop only */}
-        <div className="absolute bottom-[3vh] left-1/2 -translate-x-1/2 pointer-events-none z-20 hidden md:flex items-center gap-4 opacity-100">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" className="opacity-70">
-            <path d="M19 12H5M5 12L12 19M5 12L12 5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-
-          <div className="w-14 h-6 rounded-full border border-white/50 flex items-center justify-center relative bg-black/40 backdrop-blur-md">
-            <motion.div
-              animate={{ x: [-8, 8, -8] }}
-              transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-              className="w-1.5 h-1.5 bg-[#ff6b1a] rounded-full"
-            />
+        {/* ─── Projects Display ─── */}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center min-h-[40vh] gap-4">
+            <div className="w-8 h-8 border-2 border-white/20 border-t-[#ff6b1a] rounded-full animate-spin" />
+            <p className="text-white/40 font-mono text-xs uppercase tracking-[0.25em]">Loading case studies...</p>
           </div>
+        ) : filteredProjects.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-24 text-center border border-dashed border-white/10 rounded-3xl bg-white/[0.01]">
+            <p className="text-white/30 text-sm font-mono uppercase tracking-[0.3em] mb-3">No matching projects found</p>
+            <p className="text-white/50 text-xs max-w-sm mb-6">
+              Try adjusting your search query or selecting a different category tab.
+            </p>
+            <button
+              onClick={() => { setActiveCategory("ALL"); setSearchQuery(""); }}
+              className="px-5 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-mono uppercase tracking-[0.2em] text-[#ff6b1a] transition-all"
+            >
+              Reset Filters
+            </button>
+          </div>
+        ) : viewMode === "grid" ? (
+          /* ─── GRID VIEW ─── */
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {filteredProjects.map((project, idx) => {
+              const meta = DOMAIN_METAS[project.id] || { accent: "#ff6b1a", bgGradient: "from-white/5 to-black", tag: "System", icon: FiLayers };
+              const techPills = project.tech ? project.tech.split(/·|,|;/).map(t => t.trim()).filter(Boolean) : [];
+              const services = project.services || [];
 
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" className="opacity-70">
-            <path d="M5 12H19M19 12L12 19M19 12L12 5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
-      </section>
+              return (
+                <motion.div
+                  key={project.id}
+                  initial={{ opacity: 0, y: 25 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, delay: idx * 0.05 }}
+                  className="group relative bg-[#0e0e11] hover:bg-[#121217] border border-white/[0.08] hover:border-white/20 rounded-2xl md:rounded-3xl p-6 md:p-7 flex flex-col justify-between transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/60 overflow-hidden"
+                >
+                  {/* Accent glow line on top of card */}
+                  <div 
+                    className="absolute top-0 left-6 right-6 h-[2px] opacity-20 group-hover:opacity-100 transition-opacity duration-500 rounded-full"
+                    style={{ backgroundColor: meta.accent }}
+                  />
 
+                  {/* Top Row: Project Index, Domain Badge & Icon */}
+                  <div>
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="flex items-center gap-2.5">
+                        <span 
+                          className="font-mono text-xs font-black px-2.5 py-0.5 rounded-full border"
+                          style={{ color: meta.accent, borderColor: `${meta.accent}30`, backgroundColor: `${meta.accent}10` }}
+                        >
+                          #{String(project.num || idx + 1).padStart(2, "0")}
+                        </span>
+                        <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/40">
+                          {meta.tag}
+                        </span>
+                      </div>
+                      <div 
+                        className="w-8 h-8 rounded-xl flex items-center justify-center border transition-transform duration-300 group-hover:scale-110"
+                        style={{ backgroundColor: `${meta.accent}12`, borderColor: `${meta.accent}25`, color: meta.accent }}
+                      >
+                        <meta.icon size={15} />
+                      </div>
+                    </div>
 
-    </>
+                    {/* Title */}
+                    <h3 className="text-xl md:text-2xl font-black text-white group-hover:text-[#ff6b1a] transition-colors leading-snug tracking-tight mb-3">
+                      <Link href={`/project/${project.id}`}>
+                        {project.title}
+                      </Link>
+                    </h3>
+
+                    {/* Description Excerpt */}
+                    <p className="text-white/55 text-xs sm:text-sm font-light leading-relaxed mb-6 line-clamp-3">
+                      {project.description}
+                    </p>
+
+                    {/* Deliverables snippet */}
+                    {services.length > 0 && (
+                      <div className="mb-6 space-y-1.5">
+                        {services.slice(0, 2).map((svc, sIdx) => (
+                          <div key={sIdx} className="flex items-center gap-2 text-[11px] text-white/70">
+                            <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: meta.accent }} />
+                            <span className="truncate">{svc}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Tech Badges */}
+                    {techPills.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 mb-6">
+                        {techPills.slice(0, 4).map((tech, tIdx) => (
+                          <span 
+                            key={tIdx} 
+                            className="text-[9px] font-mono uppercase tracking-[0.1em] px-2.5 py-1 bg-white/[0.03] border border-white/[0.06] rounded-md text-white/50"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                        {techPills.length > 4 && (
+                          <span className="text-[9px] font-mono text-white/30 px-1.5 py-1">
+                            +{techPills.length - 4}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between gap-3">
+                    <button
+                      onClick={() => setShowcaseIdx(idx)}
+                      className="text-xs font-mono uppercase tracking-[0.15em] text-white/60 hover:text-white transition-colors"
+                    >
+                      Quick View
+                    </button>
+
+                    <div className="flex items-center gap-2">
+                      {project.link && (
+                        <a
+                          href={safeUrl(project.link)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Open live website"
+                          className="p-2 rounded-xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/[0.08] text-white/50 hover:text-white transition-all"
+                        >
+                          <FiExternalLink size={14} />
+                        </a>
+                      )}
+                      <Link
+                        href={`/project/${project.id}`}
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/[0.04] hover:bg-[#ff6b1a] text-white hover:text-black border border-white/10 hover:border-[#ff6b1a] text-xs font-bold uppercase tracking-[0.15em] transition-all"
+                      >
+                        Details <FiArrowRight size={13} />
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        ) : (
+          /* ─── 3D ORBIT VIEW ─── */
+          <div className="relative w-full h-[70vh] rounded-3xl overflow-hidden border border-white/10 bg-[#060608]">
+            <div className="absolute inset-0">
+              <CircularGallery
+                key={`${activeCategory}-${searchQuery}`}
+                items={galleryItems}
+                bend={2.5}
+                textColor="gradient"
+                borderRadius={0.06}
+                font="500 36px 'Inter', sans-serif"
+                scrollSpeed={1.8}
+                scrollEase={0.06}
+                onItemClick={handleGalleryClick}
+                activeIndex={0}
+              />
+            </div>
+
+            {/* Instruction Banner at Bottom */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3 px-5 py-2.5 rounded-full bg-black/75 border border-white/10 backdrop-blur-md">
+              <span className="w-2 h-2 rounded-full bg-[#ff6b1a] animate-ping" />
+              <p className="text-[10px] font-mono tracking-[0.2em] uppercase text-white/70">
+                Drag horizontally to orbit · Click card for full case study
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ─── Quick Showcase Modal ─── */}
+      <AnimatePresence>
+        {showcaseIdx !== null && (
+          <ProjectShowcaseModal
+            items={filteredProjects}
+            currentIdx={showcaseIdx}
+            onClose={() => setShowcaseIdx(null)}
+            onSelect={(next) => setShowcaseIdx(next)}
+          />
+        )}
+      </AnimatePresence>
+    </div>
   );
 }
